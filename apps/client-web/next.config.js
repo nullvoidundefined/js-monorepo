@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@application/shared'],
+  transpilePackages: ['@client-web/shared'],
 };
 
 module.exports = nextConfig;
-

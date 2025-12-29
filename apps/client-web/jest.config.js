@@ -8,11 +8,9 @@ const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
-    '^@application/shared$': '<rootDir>/../../packages/shared/src',
-    '^@application/types$': '<rootDir>/../../packages/shared/src/types',
-    '^@application/components/(.*)$': '<rootDir>/src/components/$1',
-    '^@application/lib/(.*)$': '<rootDir>/src/lib/$1',
-    '^@application/styles/(.*)$': '<rootDir>/src/styles/$1',
+    '^@client-web/components/(.*)$': '<rootDir>/src/components/$1',
+    '^@client-web/lib/(.*)$': '<rootDir>/src/lib/$1',
+    '^@client-web/styles/(.*)$': '<rootDir>/src/styles/$1',
   },
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
@@ -23,4 +21,3 @@ const customJestConfig = {
 };
 
 module.exports = createJestConfig(customJestConfig);
-

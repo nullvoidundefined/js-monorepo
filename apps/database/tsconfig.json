@@ -14,13 +14,10 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@application/shared": ["../../packages/shared/src"],
-      "@application/types": ["../../packages/shared/src/types"],
-      "@application/migrations/*": ["./src/migrations/*"],
-      "@application/seeds/*": ["./src/seeds/*"]
+      "@client-web/migrations/*": ["./src/migrations/*"],
+      "@client-web/seeds/*": ["./src/seeds/*"]
     }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
-

@@ -31,7 +31,12 @@ module.exports = {
         groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
         pathGroups: [
           {
-            pattern: '@application/**',
+            pattern: '@packages/**',
+            group: 'internal',
+            position: 'before',
+          },
+          {
+            pattern: '@client-web/**',
             group: 'internal',
             position: 'before',
           },
@@ -56,4 +61,3 @@ module.exports = {
     },
   },
 };
-

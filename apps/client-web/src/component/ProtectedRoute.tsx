@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { isAuthenticated } from '@application/lib/auth';
+import { isAuthenticated } from '@client-web/lib/auth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   useEffect(() => {
     const checkAuth = async () => {
       const authenticated = await isAuthenticated();
-      
+
       if (!authenticated) {
         router.push('/login');
       } else {
@@ -31,12 +31,14 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (isChecking) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '100vh' 
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+        }}
+      >
         <p>Loading...</p>
       </div>
     );
@@ -48,4 +50,3 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   return <>{children}</>;
 }
-

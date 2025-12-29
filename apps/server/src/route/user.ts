@@ -1,7 +1,6 @@
+import { User } from '@packages/type';
 import { db, users } from 'database';
 import { Request, Response, Router } from 'express';
-
-import { User } from '@application/shared';
 
 const userRouter = Router();
 

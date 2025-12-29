@@ -1,4 +1,4 @@
-import { User } from '@application/shared';
+import { User } from '@packages/type';
 
 interface UserCardProps {
   user: User;

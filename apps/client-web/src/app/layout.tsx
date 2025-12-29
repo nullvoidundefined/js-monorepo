@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import '@application/styles/globals.css';
+import '@client-web/styles/globals.css';
 
 export const metadata: Metadata = {
   title: 'Client Web App',
@@ -17,4 +17,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
-

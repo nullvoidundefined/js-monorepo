@@ -3,8 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { getCurrentUser, logout } from '@application/lib/auth';
-import { User } from '@application/shared';
+import { User } from '@packages/type';
+
+import { getCurrentUser, logout } from '@client-web/lib/auth';
 
 import { ProtectedRoute } from 'src/component/ProtectedRoute';
 import { UserCard } from 'src/component/UserCard';

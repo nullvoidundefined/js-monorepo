@@ -1,5 +1,5 @@
 import 'express-session';
-import { User } from '@application/shared';
+import { User } from '@packages/type';
 
 declare global {
   namespace Express {

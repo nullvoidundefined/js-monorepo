@@ -2,7 +2,7 @@
  * Authentication utilities for Google OAuth integration
  */
 
-import { User } from '@application/shared';
+import { User } from '@packages/type';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 

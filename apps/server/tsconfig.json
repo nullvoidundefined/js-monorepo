@@ -13,16 +13,13 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@application/shared": ["../../packages/shared/src"],
-      "@application/types": ["../../packages/shared/src/types"],
-      "@application/controllers/*": ["./src/controllers/*"],
-      "@application/routes/*": ["./src/routes/*"],
-      "@application/middleware/*": ["./src/middleware/*"],
-      "@application/utils/*": ["./src/utils/*"],
+      "@client-web/controllers/*": ["./src/controllers/*"],
+      "@client-web/routes/*": ["./src/routes/*"],
+      "@client-web/middleware/*": ["./src/middleware/*"],
+      "@client-web/utils/*": ["./src/utils/*"],
       "database": ["../database/src"]
     }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
-

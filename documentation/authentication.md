@@ -100,6 +100,7 @@ SESSION_SECRET=your_random_secret_key_here
 ```
 
 Generate a secure session secret:
+
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
@@ -118,13 +119,13 @@ The `users` table includes Google OAuth support:
 // apps/database/src/schema/users.ts
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
-  googleId: varchar('google_id', { length: 255 }).unique(),  // Google user ID
+  googleId: varchar('google_id', { length: 255 }).unique(), // Google user ID
   email: varchar('email', { length: 255 }).notNull().unique(),
   username: varchar('username', { length: 100 }).notNull().unique(),
-  password: varchar('password', { length: 255 }),  // Null for OAuth users
+  password: varchar('password', { length: 255 }), // Null for OAuth users
   firstName: varchar('first_name', { length: 100 }),
   lastName: varchar('last_name', { length: 100 }),
-  photo: text('photo'),  // Google profile photo URL
+  photo: text('photo'), // Google profile photo URL
   isActive: boolean('is_active').default(true).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
@@ -132,6 +133,7 @@ export const users = pgTable('users', {
 ```
 
 Ensure migrations are up to date:
+
 ```bash
 npm run db:migrate
 ```
@@ -160,28 +162,31 @@ passport.use(
       // Find or create user in database
       const email = profile.emails?.[0]?.value;
       const googleId = profile.id;
-      
+
       // Check if user exists
-      const [existingUser] = await db.select()
+      const [existingUser] = await db
+        .select()
         .from(users)
         .where(eq(users.googleId, googleId))
         .limit(1);
-      
+
       if (existingUser) {
         // Update existing user
-        const [updated] = await db.update(users)
+        const [updated] = await db
+          .update(users)
           .set({ email, photo: profile.photos?.[0]?.value })
           .where(eq(users.id, existingUser.id))
           .returning();
         return done(null, updated);
       } else {
         // Create new user
-        const [newUser] = await db.insert(users)
+        const [newUser] = await db
+          .insert(users)
           .values({
             googleId,
             email,
             username: email.split('@')[0] + '_' + Date.now(),
-            password: null,  // OAuth users don't have passwords
+            password: null, // OAuth users don't have passwords
             firstName: profile.displayName?.split(' ')[0],
             lastName: profile.displayName?.split(' ').slice(1).join(' '),
             photo: profile.photos?.[0]?.value,
@@ -205,7 +210,7 @@ passport.deserializeUser((user, done) => done(null, user));
 **1. Initiate OAuth Flow**
 
 ```typescript
-GET /api/auth/google
+GET / api / auth / google;
 ```
 
 Redirects user to Google OAuth consent screen.
@@ -213,7 +218,7 @@ Redirects user to Google OAuth consent screen.
 **2. OAuth Callback**
 
 ```typescript
-GET /api/auth/google/callback
+GET / api / auth / google / callback;
 ```
 
 Handles Google OAuth callback, creates session, redirects to frontend.
@@ -221,7 +226,7 @@ Handles Google OAuth callback, creates session, redirects to frontend.
 **3. Get Current User**
 
 ```typescript
-GET /api/auth/user
+GET / api / auth / user;
 ```
 
 Returns currently authenticated user or 401 if not authenticated.
@@ -229,7 +234,7 @@ Returns currently authenticated user or 401 if not authenticated.
 **4. Logout**
 
 ```typescript
-POST /api/auth/logout
+POST / api / auth / logout;
 ```
 
 Destroys session and clears cookies.
@@ -248,22 +253,26 @@ import { authRouter } from './route/authentication';
 const app = express();
 
 // CORS configuration
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true,  // Allow cookies
-}));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    credentials: true, // Allow cookies
+  })
+);
 
 // Session configuration
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'dev-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',  // HTTPS only in production
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,  // 24 hours
-  },
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'dev-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
 
 // Initialize Passport
 app.use(passport.initialize());
@@ -328,7 +337,7 @@ export async function logout() {
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { loginWithGoogle, isAuthenticated } from '@application/lib/auth';
+import { loginWithGoogle, isAuthenticated } from '@client-web/lib/auth';
 
 export default function Login() {
   const router = useRouter();
@@ -362,7 +371,7 @@ export default function Login() {
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { isAuthenticated } from '@application/lib/auth';
+import { isAuthenticated } from '@client-web/lib/auth';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -409,8 +418,8 @@ export default function Dashboard() {
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getCurrentUser } from '@application/lib/auth';
-import { User } from '@application/shared';
+import { getCurrentUser } from '@client-web/lib/auth';
+import { User } from '@packages/type';
 
 export default function Profile() {
   const [user, setUser] = useState<User | null>(null);
@@ -434,7 +443,7 @@ export default function Profile() {
 
 ```typescript
 import { useRouter } from 'next/navigation';
-import { logout } from '@application/lib/auth';
+import { logout } from '@client-web/lib/auth';
 
 export function LogoutButton() {
   const router = useRouter();
@@ -453,6 +462,7 @@ export function LogoutButton() {
 ### Environment Variables
 
 **Backend Production:**
+
 ```bash
 GOOGLE_CLIENT_ID=your_production_client_id
 GOOGLE_CLIENT_SECRET=your_production_client_secret
@@ -463,6 +473,7 @@ NODE_ENV=production
 ```
 
 **Frontend Production:**
+
 ```bash
 NEXT_PUBLIC_API_URL=https://api.yourdomain.com
 ```
@@ -472,10 +483,12 @@ NEXT_PUBLIC_API_URL=https://api.yourdomain.com
 Add production URLs to Google Cloud Console:
 
 **Authorized JavaScript origins:**
+
 - `https://yourdomain.com`
 - `https://api.yourdomain.com`
 
 **Authorized redirect URIs:**
+
 - `https://api.yourdomain.com/api/auth/google/callback`
 
 ### Security Checklist
@@ -498,10 +511,12 @@ Add production URLs to Google Cloud Console:
 Currently uses in-memory session storage (default for express-session).
 
 **Pros:**
+
 - Simple setup
 - No external dependencies
 
 **Cons:**
+
 - Sessions lost on server restart
 - Not suitable for multiple server instances
 
@@ -527,17 +542,19 @@ const redisClient = createClient({
 redisClient.connect();
 
 // Use Redis for sessions
-app.use(session({
-  store: new RedisStore({ client: redisClient }),
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: true,
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
-  },
-}));
+app.use(
+  session({
+    store: new RedisStore({ client: redisClient }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: true,
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  })
+);
 ```
 
 ## Troubleshooting
@@ -545,21 +562,25 @@ app.use(session({
 ### OAuth Errors
 
 **Error: redirect_uri_mismatch**
+
 - Verify redirect URI in Google Console matches `GOOGLE_CALLBACK_URL`
 - Check for trailing slashes (must match exactly)
 
 **Error: invalid_client**
+
 - Verify `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are correct
 - Ensure credentials are for the correct Google Cloud project
 
 ### Session Issues
 
 **Sessions not persisting**
+
 - Check that `credentials: 'include'` is set in frontend fetch calls
 - Verify CORS allows credentials
 - Check browser console for cookie warnings
 
 **User logged out unexpectedly**
+
 - Check session expiration settings
 - Verify Redis connection (if using Redis)
 - Check server logs for session errors
@@ -567,10 +588,11 @@ app.use(session({
 ### CORS Issues
 
 **Credentials not being sent**
+
 - Set `credentials: 'include'` in fetch options
 - Configure CORS to allow credentials:
   ```typescript
-  cors({ origin: CLIENT_URL, credentials: true })
+  cors({ origin: CLIENT_URL, credentials: true });
   ```
 
 ## Additional Resources
@@ -580,4 +602,3 @@ app.use(session({
 - [express-session Documentation](https://github.com/expressjs/session)
 - [architecture.md](./architecture.md) - System architecture
 - [database-overview.md](./database-overview.md) - Database guide
-
