@@ -6,4 +6,3 @@ export interface User {
   updatedAt: Date | string;
   photo?: string;
 }
-
