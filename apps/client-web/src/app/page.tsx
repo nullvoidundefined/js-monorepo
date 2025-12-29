@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react';
 import { ClientRoute } from '@packages/constant';
 import { User } from '@packages/type';
 
-import { ProtectedRoute } from '@client-web/components/protectedRoute';
+import { AuthGuard } from '@client-web/components/authGuard';
+import { AuthenticationStatus } from '@client-web/constant/authentication';
 import { UserCard } from '@client-web/components/userCard';
 import { getCurrentUser, logout } from '@client-web/service/auth';
 
@@ -75,7 +76,7 @@ export default function Home() {
   };
 
   return (
-    <ProtectedRoute>
+    <AuthGuard allowed={AuthenticationStatus.Authenticated} fallbackRoute={ClientRoute.Login}>
       <main className="container">
         <div className={styles.header}>
           <h1>Welcome to Client Web</h1>
@@ -136,6 +137,6 @@ export default function Home() {
           )}
         </div>
       </main>
-    </ProtectedRoute>
+    </AuthGuard>
   );
 }

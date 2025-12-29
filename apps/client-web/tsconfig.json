@@ -23,6 +23,7 @@
     "paths": {
       "@packages/type": ["../../packages/type/src/index.ts"],
       "@client-web/components/*": ["src/component/*"],
+      "@client-web/constant/*": ["src/constant/*"],
       "@client-web/service/*": ["src/service/*"],
       "@client-web/style/*": ["./src/style/*"]
     }

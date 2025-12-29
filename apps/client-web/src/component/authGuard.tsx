@@ -4,34 +4,49 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { ClientRoute } from '@packages/constant';
+import { AuthenticationStatus } from '@client-web/constant/authentication';
 
 import { isAuthenticated } from 'src/service/auth';
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-}
+import styles from './authGuard.module.scss';
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
+type AuthGuardProps = {
+  allowed: AuthenticationStatus;
+  children: React.ReactNode;
+  fallbackRoute: ClientRoute;
+};
+
+export function AuthGuard({ children, allowed, fallbackRoute }: AuthGuardProps) {
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
+    // Check if user is authorized based on authentication status
+    const shouldBeAuthorized = (authenticated: boolean) => {
+      return (
+        (allowed === AuthenticationStatus.Authenticated && authenticated) ||
+        (allowed === AuthenticationStatus.Unauthenticated && !authenticated)
+      );
+    };
+
     const checkAuth = async () => {
       const authenticated = await isAuthenticated();
+      const authorized = shouldBeAuthorized(authenticated);
 
-      if (!authenticated) {
-        router.push(ClientRoute.Login);
-      } else {
+      if (authorized) {
         setIsAuthorized(true);
+      } else {
+        router.push(fallbackRoute);
       }
       setIsChecking(false);
     };
 
     const handleFocus = async () => {
       const authenticated = await isAuthenticated();
-      if (!authenticated) {
-        router.push(ClientRoute.Login);
+
+      if (!shouldBeAuthorized(authenticated)) {
+        router.push(fallbackRoute);
       }
     };
 
@@ -45,18 +60,12 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     return () => {
       window.removeEventListener('focus', handleFocus);
     };
-  }, [router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allowed, fallbackRoute, router]);
 
   if (isChecking) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-        }}
-      >
+      <div className={styles.loadingContainer}>
         <p>Loading...</p>
       </div>
     );
@@ -69,4 +78,4 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   return <>{children}</>;
 }
 
-ProtectedRoute.displayName = 'ProtectedRoute';
+AuthGuard.displayName = 'AuthGuard';

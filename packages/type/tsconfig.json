@@ -15,7 +15,7 @@
     "composite": false,
     "baseUrl": "."
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../../apps/client-web/src/authentication.ts"],
   "exclude": ["node_modules", "dist"]
 }
 

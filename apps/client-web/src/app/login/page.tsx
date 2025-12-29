@@ -22,7 +22,20 @@ export default function LoginPage() {
         setIsCheckingAuth(false);
       }
     };
+
+    // Check on mount
     checkAuth();
+
+    // Check when window regains focus
+    const handleFocus = () => {
+      checkAuth();
+    };
+
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
   }, [router]);
 
   const handleGoogleLogin = () => {
