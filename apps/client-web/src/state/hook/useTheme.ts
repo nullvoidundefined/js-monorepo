@@ -16,7 +16,8 @@ const THEME_STORAGE_KEY = 'app-theme';
  * Hook for managing theme state with support for system preference
  * @returns {UseThemeReturn} Theme state and setter
  */
-export function useTheme(): UseThemeReturn {
+
+function useTheme(): UseThemeReturn {
   const [theme, setThemeState] = useState<Theme>('system');
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
 
@@ -31,7 +32,9 @@ export function useTheme(): UseThemeReturn {
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'dark'
       : 'light';
-    setResolvedTheme(storedTheme === 'system' || !storedTheme ? systemTheme : (storedTheme as 'light' | 'dark'));
+    setResolvedTheme(
+      storedTheme === 'system' || !storedTheme ? systemTheme : (storedTheme as 'light' | 'dark')
+    );
   }, []);
 
   // Update resolved theme when theme changes
@@ -74,3 +77,4 @@ export function useTheme(): UseThemeReturn {
   return { theme, resolvedTheme, setTheme };
 }
 
+export { useTheme };

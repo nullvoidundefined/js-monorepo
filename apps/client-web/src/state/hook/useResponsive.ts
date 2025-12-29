@@ -1,48 +1,20 @@
 import { useState, useEffect } from 'react';
+import { Breakpoint } from '@client-web/constant/breakpoint';
 
-// Read breakpoint values from CSS custom properties (single source of truth in SCSS)
-const getBreakpoints = () => {
-  if (typeof window === 'undefined') {
-    // Fallback for SSR
-    return {
-      small: 768,
-      medium: 1024,
-      large: 1200,
-      extraLarge: 1400,
-    } as const;
-  }
-
-  const root = getComputedStyle(document.documentElement);
-  return {
-    small: parseInt(root.getPropertyValue('--breakpoint-small')) || 768,
-    medium: parseInt(root.getPropertyValue('--breakpoint-medium')) || 1024,
-    large: parseInt(root.getPropertyValue('--breakpoint-large')) || 1200,
-    extraLarge: parseInt(root.getPropertyValue('--breakpoint-extra-large')) || 1400,
-  } as const;
-};
-
-type BreakpointValues = ReturnType<typeof getBreakpoints>;
-type Breakpoint = BreakpointValues[keyof BreakpointValues];
-
-const useResponsive = () => {
-  const [breakpoints, setBreakpoints] = useState<BreakpointValues>(() => getBreakpoints());
-  const [breakpoint, setBreakpoint] = useState<Breakpoint>(breakpoints.small);
+function useResponsive() {
+  const [breakpoint, setBreakpoint] = useState<Breakpoint>(Breakpoint.Small);
 
   useEffect(() => {
-    // Initialize breakpoints on client side
-    const clientBreakpoints = getBreakpoints();
-    setBreakpoints(clientBreakpoints);
-
     const handleResize = () => {
-      let newBreakpoint: Breakpoint = clientBreakpoints.small;
-      if (window.innerWidth < clientBreakpoints.small) {
-        newBreakpoint = clientBreakpoints.small;
-      } else if (window.innerWidth < clientBreakpoints.medium) {
-        newBreakpoint = clientBreakpoints.medium;
-      } else if (window.innerWidth < clientBreakpoints.large) {
-        newBreakpoint = clientBreakpoints.large;
+      let newBreakpoint: Breakpoint = Breakpoint.Small;
+      if (window.innerWidth < Breakpoint.Small) {
+        newBreakpoint = Breakpoint.Small;
+      } else if (window.innerWidth < Breakpoint.Medium) {
+        newBreakpoint = Breakpoint.Medium;
+      } else if (window.innerWidth < Breakpoint.Large) {
+        newBreakpoint = Breakpoint.Large;
       } else {
-        newBreakpoint = clientBreakpoints.extraLarge;
+        newBreakpoint = Breakpoint.ExtraLarge;
       }
       setBreakpoint(newBreakpoint);
     };
@@ -51,15 +23,16 @@ const useResponsive = () => {
     handleResize();
 
     window.addEventListener('resize', handleResize);
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
   return {
     breakpoint,
-    isMobile: breakpoint === breakpoints.small,
-    isDesktop: breakpoint !== breakpoints.small,
+    isDesktop: breakpoint !== Breakpoint.Small,
+    isMobile: breakpoint === Breakpoint.Small,
   };
-};
+}
 
 export { useResponsive };
