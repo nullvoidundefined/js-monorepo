@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { isAuthenticated } from '@client-web/lib/auth';
+import { isAuthenticated } from 'src/service/auth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

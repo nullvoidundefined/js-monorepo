@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import '@client-web/styles/globals.css';
+import '@client-web/style/globals.css';
 
 export const metadata: Metadata = {
   title: 'Client Web App',

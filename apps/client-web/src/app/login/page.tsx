@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { isAuthenticated, loginWithGoogle } from '@client-web/lib/auth';
+import { isAuthenticated, loginWithGoogle } from 'src/service/auth';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);

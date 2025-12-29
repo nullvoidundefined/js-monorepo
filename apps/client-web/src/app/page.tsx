@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { User } from '@packages/type';
 
-import { getCurrentUser, logout } from '@client-web/lib/auth';
+import { getCurrentUser, logout } from 'src/service/auth';
 
 import { ProtectedRoute } from 'src/component/ProtectedRoute';
 import { UserCard } from 'src/component/UserCard';

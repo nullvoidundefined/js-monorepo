@@ -9,8 +9,8 @@ const customJestConfig = {
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
     '^@client-web/components/(.*)$': '<rootDir>/src/components/$1',
-    '^@client-web/lib/(.*)$': '<rootDir>/src/lib/$1',
-    '^@client-web/styles/(.*)$': '<rootDir>/src/styles/$1',
+    '^@client-web/service/(.*)$': '<rootDir>/src/service/$1',
+    '^@client-web/style/(.*)$': '<rootDir>/src/style/$1',
   },
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
