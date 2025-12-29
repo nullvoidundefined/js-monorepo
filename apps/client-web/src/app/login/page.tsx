@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { loginWithGoogle, isAuthenticated } from '@application/lib/auth';
+import { useEffect, useState } from 'react';
+
+import { isAuthenticated, loginWithGoogle } from '@application/lib/auth';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);

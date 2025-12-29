@@ -1,14 +1,8 @@
 import 'express-session';
+import { User } from '@application/shared';
 
 declare global {
   namespace Express {
-    interface User {
-      id: string;
-      email?: string;
-      name?: string;
-      photo?: string;
-    }
-
     interface Request {
       user?: User;
       logout(callback: (err: Error | null) => void): void;
@@ -27,4 +21,3 @@ declare module 'express-session' {
     };
   }
 }
-

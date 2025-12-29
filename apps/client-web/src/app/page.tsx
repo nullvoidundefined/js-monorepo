@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { User } from '@application/shared';
-import { UserCard } from 'src/component/UserCard';
-import { ProtectedRoute } from 'src/component/ProtectedRoute';
-import { logout, getCurrentUser } from '@application/lib/auth';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import { getCurrentUser, logout } from '@application/lib/auth';
+import { User } from '@application/shared';
+
+import { ProtectedRoute } from 'src/component/ProtectedRoute';
+import { UserCard } from 'src/component/UserCard';
 
 type SortField = 'name' | 'email' | 'id';
 type SortOrder = 'asc' | 'desc';
@@ -20,17 +22,9 @@ export default function Home() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const authUser = await getCurrentUser();
-      if (authUser) {
-        // Convert AuthUser to User format
-        const userData: User = {
-          id: authUser.id,
-          email: authUser.email || '',
-          name: authUser.name || 'User',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-        setUser(userData);
+      const user = await getCurrentUser();
+      if (user) {
+        setUser(user);
       }
       setIsLoading(false);
     };

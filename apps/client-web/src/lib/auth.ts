@@ -6,13 +6,6 @@ import { User } from '@application/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-export interface AuthUser {
-  id: string;
-  email?: string;
-  name?: string;
-  photo?: string;
-}
-
 /**
  * Check if user is authenticated by fetching current user from backend
  */
@@ -28,7 +21,7 @@ export async function isAuthenticated(): Promise<boolean> {
 /**
  * Get the current authenticated user from the backend
  */
-export async function getCurrentUser(): Promise<AuthUser | null> {
+export async function getCurrentUser(): Promise<User | null> {
   try {
     const response = await fetch(`${API_URL}/api/auth/user`, {
       credentials: 'include', // Important: include cookies for session
@@ -75,4 +68,3 @@ export async function logout(): Promise<void> {
 export function getAuthToken(): string | null {
   return null;
 }
-

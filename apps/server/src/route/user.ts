@@ -14,7 +14,7 @@ userRouter.get('/api/users', async (req: Request, res: Response) => {
     const dbUsers = await db.select().from(users);
 
     // Transform database users to match the User type
-    const transformedUsers: User[] = dbUsers.map((dbUser) => ({
+    const transformedUsers: User[] = dbUsers.map(dbUser => ({
       id: dbUser.id.toString(),
       email: dbUser.email,
       name: [dbUser.firstName, dbUser.lastName].filter(Boolean).join(' ') || dbUser.username,

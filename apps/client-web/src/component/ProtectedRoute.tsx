@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 import { isAuthenticated } from '@application/lib/auth';
 
 interface ProtectedRouteProps {

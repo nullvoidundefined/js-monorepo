@@ -4,5 +4,6 @@ export interface User {
   name: string;
   createdAt: Date | string;
   updatedAt: Date | string;
+  photo?: string;
 }
 

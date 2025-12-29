@@ -86,6 +86,8 @@ passport.use(
           id: dbUser.id.toString(),
           email: dbUser.email,
           name: [dbUser.firstName, dbUser.lastName].filter(Boolean).join(' '),
+          createdAt: dbUser.createdAt,
+          updatedAt: dbUser.updatedAt,
           photo: dbUser.photo || undefined,
         };
 
