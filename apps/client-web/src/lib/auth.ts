@@ -1,36 +1,78 @@
 /**
- * Simple authentication utilities
- * In a production app, you'd want to use a proper auth solution like NextAuth.js
+ * Authentication utilities for Google OAuth integration
  */
 
-const AUTH_TOKEN_KEY = 'auth_token';
+import { User } from '@application/shared';
 
-export function isAuthenticated(): boolean {
-  if (typeof window === 'undefined') {
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+export interface AuthUser {
+  id: string;
+  email?: string;
+  name?: string;
+  photo?: string;
+}
+
+/**
+ * Check if user is authenticated by fetching current user from backend
+ */
+export async function isAuthenticated(): Promise<boolean> {
+  try {
+    const user = await getCurrentUser();
+    return user !== null;
+  } catch {
     return false;
   }
-  return localStorage.getItem(AUTH_TOKEN_KEY) !== null;
 }
 
-export function login(email: string, password: string): boolean {
-  // Simple mock authentication - replace with real API call
-  if (email && password.length >= 6) {
-    localStorage.setItem(AUTH_TOKEN_KEY, 'mock_token_' + Date.now());
-    return true;
-  }
-  return false;
-}
+/**
+ * Get the current authenticated user from the backend
+ */
+export async function getCurrentUser(): Promise<AuthUser | null> {
+  try {
+    const response = await fetch(`${API_URL}/api/auth/user`, {
+      credentials: 'include', // Important: include cookies for session
+    });
 
-export function logout(): void {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem(AUTH_TOKEN_KEY);
-  }
-}
+    if (!response.ok) {
+      return null;
+    }
 
-export function getAuthToken(): string | null {
-  if (typeof window === 'undefined') {
+    const data = await response.json();
+    return data.user || null;
+  } catch (error) {
+    console.error('Error fetching current user:', error);
     return null;
   }
-  return localStorage.getItem(AUTH_TOKEN_KEY);
+}
+
+/**
+ * Initiate Google OAuth login
+ * This redirects the user to the backend OAuth endpoint
+ */
+export function loginWithGoogle(): void {
+  window.location.href = `${API_URL}/api/auth/google`;
+}
+
+/**
+ * Logout user by calling the backend logout endpoint
+ */
+export async function logout(): Promise<void> {
+  try {
+    await fetch(`${API_URL}/api/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+  } catch (error) {
+    console.error('Error during logout:', error);
+  }
+}
+
+/**
+ * Legacy function for backwards compatibility
+ * Now returns false as we use OAuth
+ */
+export function getAuthToken(): string | null {
+  return null;
 }
 

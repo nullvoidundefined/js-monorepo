@@ -1,37 +1,46 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login } from '@application/lib/auth';
+import { loginWithGoogle, isAuthenticated } from '@application/lib/auth';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const router = useRouter();
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
-
-    try {
-      const success = login(email, password);
-      
-      if (success) {
-        // Redirect to home page after successful login
+  // Check if user is already authenticated
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (authenticated) {
         router.push('/');
-        router.refresh();
       } else {
-        setError('Invalid email or password. Password must be at least 6 characters.');
+        setIsCheckingAuth(false);
       }
-    } catch (err) {
-      setError('An error occurred during login. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+    };
+    checkAuth();
+  }, [router]);
+
+  const handleGoogleLogin = () => {
+    setIsLoading(true);
+    loginWithGoogle();
   };
+
+  if (isCheckingAuth) {
+    return (
+      <main className="container">
+        <div style={{ 
+          maxWidth: '400px', 
+          margin: '80px auto',
+          padding: '32px',
+          textAlign: 'center'
+        }}>
+          <p>Checking authentication...</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="container">
@@ -43,89 +52,66 @@ export default function LoginPage() {
         borderRadius: '8px',
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
       }}>
-        <h1 style={{ marginBottom: '24px', textAlign: 'center' }}>Login</h1>
+        <h1 style={{ marginBottom: '24px', textAlign: 'center' }}>Welcome</h1>
         
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '16px' }}>
-            <label htmlFor="email" style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                fontSize: '16px',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                boxSizing: 'border-box'
-              }}
-              placeholder="Enter your email"
-            />
-          </div>
+        <p style={{ 
+          marginBottom: '32px', 
+          textAlign: 'center', 
+          color: '#666',
+          fontSize: '14px'
+        }}>
+          Sign in to continue to the application
+        </p>
 
-          <div style={{ marginBottom: '24px' }}>
-            <label htmlFor="password" style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                fontSize: '16px',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                boxSizing: 'border-box'
-              }}
-              placeholder="Enter your password (min 6 characters)"
-            />
-          </div>
+        <button
+          onClick={handleGoogleLogin}
+          disabled={isLoading}
+          style={{
+            width: '100%',
+            padding: '12px 24px',
+            fontSize: '16px',
+            fontWeight: '500',
+            color: '#444',
+            backgroundColor: 'white',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            cursor: isLoading ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '12px',
+            transition: 'all 0.2s',
+            opacity: isLoading ? 0.6 : 1,
+          }}
+          onMouseEnter={(e) => {
+            if (!isLoading) {
+              e.currentTarget.style.backgroundColor = '#f8f8f8';
+              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'white';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            <path fill="none" d="M0 0h48v48H0z"/>
+          </svg>
+          {isLoading ? 'Signing in...' : 'Sign in with Google'}
+        </button>
 
-          {error && (
-            <div style={{ 
-              marginBottom: '16px', 
-              padding: '12px', 
-              backgroundColor: '#fee', 
-              color: '#c33',
-              borderRadius: '4px',
-              fontSize: '14px'
-            }}>
-              {error}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            style={{
-              width: '100%',
-              padding: '12px',
-              fontSize: '16px',
-              fontWeight: '600',
-              color: 'white',
-              backgroundColor: isLoading ? '#999' : '#0070f3',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              transition: 'background-color 0.2s'
-            }}
-          >
-            {isLoading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-
-        <p style={{ marginTop: '16px', fontSize: '14px', color: '#666', textAlign: 'center' }}>
-          Demo: Use any email and a password with at least 6 characters
+        <p style={{ 
+          marginTop: '24px', 
+          fontSize: '12px', 
+          color: '#999', 
+          textAlign: 'center',
+          lineHeight: '1.5'
+        }}>
+          By signing in, you agree to our terms of service and privacy policy
         </p>
       </div>
     </main>

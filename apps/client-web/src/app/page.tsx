@@ -1,24 +1,39 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { User } from '@application/shared';
 import { UserCard } from '@application/components/UserCard';
 import { ProtectedRoute } from '@application/components/ProtectedRoute';
-import { logout } from '@application/lib/auth';
+import { logout, getCurrentUser } from '@application/lib/auth';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const exampleUser: User = {
-    id: '1',
-    email: 'john.doe@example.com',
-    name: 'John Doe',
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date(),
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      const authUser = await getCurrentUser();
+      if (authUser) {
+        // Convert AuthUser to User format
+        const userData: User = {
+          id: authUser.id,
+          email: authUser.email || '',
+          name: authUser.name || 'User',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        setUser(userData);
+      }
+      setIsLoading(false);
+    };
 
-  const handleLogout = () => {
-    logout();
+    fetchUser();
+  }, []);
+
+  const handleLogout = async () => {
+    await logout();
     router.push('/login');
   };
 
@@ -49,7 +64,14 @@ export default function Home() {
           </button>
         </div>
         <p>A Next.js application built with Turborepo and Turbopack</p>
-        <UserCard user={exampleUser} />
+
+        {isLoading ? (
+          <p>Loading user data...</p>
+        ) : user ? (
+          <UserCard user={user} />
+        ) : (
+          <p>No user data available</p>
+        )}
       </main>
     </ProtectedRoute>
   );

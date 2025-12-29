@@ -1,40 +1,51 @@
-import express, { Request, Response } from 'express';
+import cors from 'cors';
+import express, { json, Request, Response } from 'express';
+import session from 'express-session';
 
-import { User } from '@application/shared';
+import { authRouter, passport } from './route/authentication';
+import { userRouter } from './route/user';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(express.json());
+// CORS configuration
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    credentials: true,
+  })
+);
 
-app.get('/', (req: Request, res: Response) => {
+app.use(json());
+
+// Session configuration
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/', (_req: Request, res: Response) => {
   res.json({ message: 'Hello World from Server!' });
 });
 
-app.get('/api/users', (req: Request, res: Response) => {
-  const users: User[] = [
-    {
-      id: '1',
-      email: 'john.doe@example.com',
-      name: 'John Doe',
-      createdAt: new Date('2024-01-01'),
-      updatedAt: new Date(),
-    },
-    {
-      id: '2',
-      email: 'jane.smith@example.com',
-      name: 'Jane Smith',
-      createdAt: new Date('2024-01-02'),
-      updatedAt: new Date(),
-    },
-  ];
-
-  res.json(users);
-});
-
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+app.use(authRouter);
+app.use(userRouter);
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
@@ -43,4 +54,3 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 export { app };
-

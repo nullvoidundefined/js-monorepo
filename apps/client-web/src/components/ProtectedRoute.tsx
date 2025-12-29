@@ -14,8 +14,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    const checkAuth = () => {
-      const authenticated = isAuthenticated();
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
       
       if (!authenticated) {
         router.push('/login');
