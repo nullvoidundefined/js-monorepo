@@ -1,0 +1,75 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logoutButton {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e8e8e8;
+  }
+}
+
+.currentUserSection {
+  margin-bottom: 20px;
+}
+
+.allUsersSection {
+  margin-top: 40px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sortControls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.sortLabel {
+  font-size: 14px;
+  color: #666;
+}
+
+.sortButton {
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #f5f5f5;
+  color: #000;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #e8e8e8;
+  }
+
+  &.active {
+    background-color: #007bff;
+    color: #fff;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}
+
+.usersGrid {
+  display: grid;
+  gap: 15px;
+}
+

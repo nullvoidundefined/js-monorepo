@@ -8,6 +8,7 @@ import { User } from '@packages/type';
 import { ProtectedRoute } from 'src/component/ProtectedRoute';
 import { UserCard } from 'src/component/UserCard';
 import { getCurrentUser, logout } from 'src/service/auth';
+import styles from './page.module.scss';
 
 type SortField = 'name' | 'email' | 'id';
 type SortOrder = 'asc' | 'desc';
@@ -74,27 +75,9 @@ export default function Home() {
   return (
     <ProtectedRoute>
       <main className="container">
-        <div
-          // TODO: Move to CSS module
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '20px',
-          }}
-        >
+        <div className={styles.header}>
           <h1>Welcome to Client Web</h1>
-          <button
-            onClick={handleLogout}
-            style={{
-              padding: '8px 16px',
-              fontSize: '14px',
-              backgroundColor: '#f5f5f5',
-              border: '1px solid #ddd',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
-          >
+          <button className={styles.logoutButton} onClick={handleLogout} type="button">
             Logout
           </button>
         </div>
@@ -103,7 +86,7 @@ export default function Home() {
         {isLoading ? (
           <p>Loading user data...</p>
         ) : user ? (
-          <div style={{ marginBottom: '20px' }}>
+          <div className={styles.currentUserSection}>
             <h2>Current User</h2>
             <UserCard user={user} />
           </div>
@@ -111,57 +94,29 @@ export default function Home() {
           <p>No user data available</p>
         )}
 
-        <div style={{ marginTop: '40px' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '20px',
-            }}
-          >
+        <div className={styles.allUsersSection}>
+          <div className={styles.sectionHeader}>
             <h2>All Users</h2>
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-              <span style={{ fontSize: '14px', color: '#666' }}>Sort by:</span>
+            <div className={styles.sortControls}>
+              <span className={styles.sortLabel}>Sort by:</span>
               <button
+                className={`${styles.sortButton} ${sortBy === 'name' ? styles.active : ''}`}
                 onClick={() => handleSortChange('name')}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '14px',
-                  backgroundColor: sortBy === 'name' ? '#007bff' : '#f5f5f5',
-                  color: sortBy === 'name' ? '#fff' : '#000',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                }}
+                type="button"
               >
                 Name {sortBy === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
               </button>
               <button
+                className={`${styles.sortButton} ${sortBy === 'email' ? styles.active : ''}`}
                 onClick={() => handleSortChange('email')}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '14px',
-                  backgroundColor: sortBy === 'email' ? '#007bff' : '#f5f5f5',
-                  color: sortBy === 'email' ? '#fff' : '#000',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                }}
+                type="button"
               >
                 Email {sortBy === 'email' && (sortOrder === 'asc' ? '↑' : '↓')}
               </button>
               <button
+                className={`${styles.sortButton} ${sortBy === 'id' ? styles.active : ''}`}
                 onClick={() => handleSortChange('id')}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '14px',
-                  backgroundColor: sortBy === 'id' ? '#007bff' : '#f5f5f5',
-                  color: sortBy === 'id' ? '#fff' : '#000',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                }}
+                type="button"
               >
                 ID {sortBy === 'id' && (sortOrder === 'asc' ? '↑' : '↓')}
               </button>
@@ -169,7 +124,7 @@ export default function Home() {
           </div>
 
           {users.length > 0 ? (
-            <div style={{ display: 'grid', gap: '15px' }}>
+            <div className={styles.usersGrid}>
               {users.map(u => (
                 <UserCard key={u.id} user={u} />
               ))}

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { isAuthenticated, loginWithGoogle } from 'src/service/auth';
+import styles from './page.module.scss';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,14 +32,7 @@ export default function LoginPage() {
   if (isCheckingAuth) {
     return (
       <main className="container">
-        <div
-          style={{
-            maxWidth: '400px',
-            margin: '80px auto',
-            padding: '32px',
-            textAlign: 'center',
-          }}
-        >
+        <div className={styles.loadingContainer}>
           <p>Checking authentication...</p>
         </div>
       </main>
@@ -47,59 +41,16 @@ export default function LoginPage() {
 
   return (
     <main className="container">
-      <div
-        style={{
-          maxWidth: '400px',
-          margin: '80px auto',
-          padding: '32px',
-          border: '1px solid #ddd',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        }}
-      >
-        <h1 style={{ marginBottom: '24px', textAlign: 'center' }}>Welcome</h1>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Welcome</h1>
 
-        <p
-          style={{
-            marginBottom: '32px',
-            textAlign: 'center',
-            color: '#666',
-            fontSize: '14px',
-          }}
-        >
-          Sign in to continue to the application
-        </p>
+        <p className={styles.description}>Sign in to continue to the application</p>
 
         <button
-          onClick={handleGoogleLogin}
+          className={styles.googleButton}
           disabled={isLoading}
-          style={{
-            width: '100%',
-            padding: '12px 24px',
-            fontSize: '16px',
-            fontWeight: '500',
-            color: '#444',
-            backgroundColor: 'white',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '12px',
-            transition: 'all 0.2s',
-            opacity: isLoading ? 0.6 : 1,
-          }}
-          onMouseEnter={e => {
-            if (!isLoading) {
-              e.currentTarget.style.backgroundColor = '#f8f8f8';
-              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-            }
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.backgroundColor = 'white';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
+          onClick={handleGoogleLogin}
+          type="button"
         >
           <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
             <path
@@ -123,15 +74,7 @@ export default function LoginPage() {
           {isLoading ? 'Signing in...' : 'Sign in with Google'}
         </button>
 
-        <p
-          style={{
-            marginTop: '24px',
-            fontSize: '12px',
-            color: '#999',
-            textAlign: 'center',
-            lineHeight: '1.5',
-          }}
-        >
+        <p className={styles.footer}>
           By signing in, you agree to our terms of service and privacy policy
         </p>
       </div>

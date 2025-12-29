@@ -16,3 +16,4 @@ export function UserCard({ user }: UserCardProps) {
   );
 }
 
+UserCard.displayName = 'UserCard';
