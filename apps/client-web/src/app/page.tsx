@@ -12,6 +12,7 @@ import { UserCard } from '@client-web/components/userCard';
 import { useAuth } from 'src/state/hook/useAuth';
 
 import styles from './page.module.scss';
+import { useResponsive } from '@client-web/hook/useResponsive';
 
 type SortField = 'name' | 'email' | 'id';
 type SortOrder = 'asc' | 'desc';
@@ -22,6 +23,8 @@ export default function Home() {
   const [users, setUsers] = useState<User[]>([]);
   const [sortBy, setSortBy] = useState<SortField>('name');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+
+  const { isMobile } = useResponsive();
 
   useEffect(() => {
     const fetchUsers = async () => {

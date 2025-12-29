@@ -1,0 +1,27 @@
+// SINGLE SOURCE OF TRUTH - CSS Custom Properties
+:root {
+  --breakpoint-small: 768;
+  --breakpoint-medium: 1024;
+  --breakpoint-large: 1200;
+  --breakpoint-extra-large: 1400;
+}
+
+// SCSS variables from CSS custom properties for use in stylesheets
+$breakpoint-small: var(--breakpoint-small);
+$breakpoint-medium: var(--breakpoint-medium);
+$breakpoint-large: var(--breakpoint-large);
+$breakpoint-extra-large: var(--breakpoint-extra-large);
+
+// For media queries, we need the actual values
+// Note: CSS custom properties don't work in media queries, so we duplicate the values
+$breakpoint-values: (
+  small: 768,
+  medium: 1024,
+  large: 1200,
+  extra-large: 1400,
+);
+
+$breakpoint-small-px: map-get($breakpoint-values, small) + 'px';
+$breakpoint-medium-px: map-get($breakpoint-values, medium) + 'px';
+$breakpoint-large-px: map-get($breakpoint-values, large) + 'px';
+$breakpoint-extra-large-px: map-get($breakpoint-values, extra-large) + 'px';
