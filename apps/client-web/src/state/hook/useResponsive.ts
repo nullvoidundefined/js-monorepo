@@ -32,7 +32,6 @@ const useResponsive = () => {
     // Initialize breakpoints on client side
     const clientBreakpoints = getBreakpoints();
     setBreakpoints(clientBreakpoints);
-    console.log('breakpoints', clientBreakpoints);
 
     const handleResize = () => {
       let newBreakpoint: Breakpoint = clientBreakpoints.small;
