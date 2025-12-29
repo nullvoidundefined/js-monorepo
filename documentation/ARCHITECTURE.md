@@ -35,9 +35,14 @@ This is a JavaScript/TypeScript monorepo built with Turborepo and Turbopack, des
   - Health check endpoint
 
 #### database
-- **Purpose**: Database configuration and migrations
-- **Status**: Ready for integration with your preferred ORM
-- **Suggestions**: Prisma, TypeORM, Drizzle, or Knex
+- **Database**: PostgreSQL
+- **ORM**: Drizzle ORM (type-safe, lightweight)
+- **Migrations**: Drizzle Kit
+- **Features**:
+  - Type-safe database queries
+  - Automatic migration generation
+  - Database seeding
+  - Visual database browser (Drizzle Studio)
 
 ### Packages
 
@@ -85,6 +90,13 @@ All packages use the `@application/` prefix for imports:
 ```bash
 # Install dependencies
 npm install
+
+# Set up database (first time only)
+cd apps/database
+./scripts/init-db.sh  # or manually create database
+npm run db:generate   # Generate migrations
+npm run db:migrate    # Run migrations
+cd ../..
 
 # Run all apps in development mode
 npm run dev
@@ -169,9 +181,11 @@ TypeScript path mapping is configured in each `tsconfig.json` to resolve `@appli
 - Environment variables via `.env`
 
 ### Database
-- Configure your preferred database service
-- Add migration scripts as needed
-- Consider using Docker for local development
+- PostgreSQL database with Drizzle ORM
+- Update `DATABASE_URL` in production environment
+- Run migrations: `npm run db:migrate`
+- Use managed PostgreSQL services (AWS RDS, Heroku Postgres, Supabase, etc.)
+- Enable SSL in production: `?sslmode=require` in connection string
 
 ## Adding New Packages
 

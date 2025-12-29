@@ -1,4 +1,10 @@
+// Load environment variables before any other imports
+// eslint-disable-next-line import/order, import/newline-after-import
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import cors from 'cors';
+import { checkDatabaseConnection } from 'database';
 import express, { json, Request, Response } from 'express';
 import session from 'express-session';
 
@@ -40,8 +46,13 @@ app.get('/', (_req: Request, res: Response) => {
   res.json({ message: 'Hello World from Server!' });
 });
 
-app.get('/health', (_req: Request, res: Response) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get('/health', async (_req: Request, res: Response) => {
+  const dbConnected = await checkDatabaseConnection();
+  res.json({
+    status: dbConnected ? 'ok' : 'degraded',
+    database: dbConnected ? 'connected' : 'disconnected',
+    timestamp: new Date().toISOString(),
+  });
 });
 
 app.use(authRouter);

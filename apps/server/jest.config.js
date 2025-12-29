@@ -1,8 +1,6 @@
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  roots: ['<rootDir>/src'],
-  testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
+  collectCoverageFrom: ['src/**/*.ts', '!src/**/*.test.ts', '!src/**/__tests__/**'],
+  coverageDirectory: 'coverage',
   moduleNameMapper: {
     '^@application/shared$': '<rootDir>/../../packages/shared/src',
     '^@application/types$': '<rootDir>/../../packages/shared/src/types',
@@ -11,7 +9,8 @@ module.exports = {
     '^@application/middleware/(.*)$': '<rootDir>/src/middleware/$1',
     '^@application/utils/(.*)$': '<rootDir>/src/utils/$1',
   },
-  collectCoverageFrom: ['src/**/*.ts', '!src/**/*.test.ts', '!src/**/__tests__/**'],
-  coverageDirectory: 'coverage',
+  preset: 'ts-jest',
+  roots: ['<rootDir>/src'],
+  testEnvironment: 'node',
+  testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
 };
-

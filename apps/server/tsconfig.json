@@ -18,7 +18,8 @@
       "@application/controllers/*": ["./src/controllers/*"],
       "@application/routes/*": ["./src/routes/*"],
       "@application/middleware/*": ["./src/middleware/*"],
-      "@application/utils/*": ["./src/utils/*"]
+      "@application/utils/*": ["./src/utils/*"],
+      "database": ["../database/src"]
     }
   },
   "include": ["src/**/*"],

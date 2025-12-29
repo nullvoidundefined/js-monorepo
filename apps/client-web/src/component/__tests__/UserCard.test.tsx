@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import { UserCard } from '@application/components/UserCard';
+import { UserCard } from 'src/component/UserCard';
 
 describe('UserCard', () => {
   const mockUser = {
@@ -26,4 +26,3 @@ describe('UserCard', () => {
     expect(screen.getByText(/Updated:/)).toBeInTheDocument();
   });
 });
-
