@@ -1,12 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { ClientRoute } from '@packages/constant';
 import { AuthenticationStatus } from '@client-web/constant/authentication';
 
-import { isAuthenticated } from 'src/service/auth';
+import { useAuth } from 'src/state/hook/useAuth';
 
 import styles from './authGuard.module.scss';
 
@@ -18,40 +18,50 @@ type AuthGuardProps = {
 
 export function AuthGuard({ children, allowed, fallbackRoute }: AuthGuardProps) {
   const router = useRouter();
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [isChecking, setIsChecking] = useState(true);
+  const { isAuthenticated, isLoading, refetch } = useAuth();
+
+  // Throttle focus handler to prevent rapid-fire API calls
+  const lastFocusCheckRef = useRef(0);
+  const FOCUS_CHECK_THROTTLE_MS = 1000; // Only check once per second on focus
+
+  // Check if user is authorized based on authentication status
+  const shouldBeAuthorized = (authenticated: boolean) => {
+    return (
+      (allowed === AuthenticationStatus.Authenticated && authenticated) ||
+      (allowed === AuthenticationStatus.Unauthenticated && !authenticated)
+    );
+  };
+
+  const isAuthorized = shouldBeAuthorized(isAuthenticated);
 
   useEffect(() => {
-    // Check if user is authorized based on authentication status
-    const shouldBeAuthorized = (authenticated: boolean) => {
-      return (
-        (allowed === AuthenticationStatus.Authenticated && authenticated) ||
-        (allowed === AuthenticationStatus.Unauthenticated && !authenticated)
-      );
-    };
+    // Only redirect if we have a definitive answer (not loading)
+    if (!isLoading && !isAuthorized) {
+      router.push(fallbackRoute);
+    }
+  }, [isLoading, isAuthorized, fallbackRoute, router]);
 
-    const checkAuth = async () => {
-      const authenticated = await isAuthenticated();
-      const authorized = shouldBeAuthorized(authenticated);
-
-      if (authorized) {
-        setIsAuthorized(true);
-      } else {
-        router.push(fallbackRoute);
-      }
-      setIsChecking(false);
-    };
-
+  useEffect(() => {
     const handleFocus = async () => {
-      const authenticated = await isAuthenticated();
+      // Throttle: only check if enough time has passed since last check
+      const now = Date.now();
+      if (now - lastFocusCheckRef.current < FOCUS_CHECK_THROTTLE_MS) {
+        return;
+      }
+      lastFocusCheckRef.current = now;
 
-      if (!shouldBeAuthorized(authenticated)) {
+      // Refetch auth data from the server
+      const { data: user } = await refetch();
+      const freshIsAuthenticated = user !== null;
+      const freshIsAuthorized =
+        (allowed === AuthenticationStatus.Authenticated && freshIsAuthenticated) ||
+        (allowed === AuthenticationStatus.Unauthenticated && !freshIsAuthenticated);
+
+      // Redirect if auth status changed
+      if (!freshIsAuthorized) {
         router.push(fallbackRoute);
       }
     };
-
-    // Check auth on mount
-    checkAuth();
 
     // Add focus listener to check auth when user returns to the tab
     window.addEventListener('focus', handleFocus);
@@ -60,10 +70,9 @@ export function AuthGuard({ children, allowed, fallbackRoute }: AuthGuardProps) 
     return () => {
       window.removeEventListener('focus', handleFocus);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowed, fallbackRoute, router]);
+  }, [allowed, refetch, fallbackRoute, router]);
 
-  if (isChecking) {
+  if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
         <p>Loading...</p>

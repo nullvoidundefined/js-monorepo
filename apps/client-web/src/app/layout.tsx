@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import '@client-web/style/globals.scss';
+import { QueryProvider } from 'src/state/provider/queryProvider';
 
 export const metadata: Metadata = {
   description: 'A Next.js application in a Turborepo monorepo',
@@ -13,7 +14,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }

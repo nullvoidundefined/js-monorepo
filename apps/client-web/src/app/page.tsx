@@ -9,7 +9,7 @@ import { User } from '@packages/type';
 import { AuthGuard } from '@client-web/components/authGuard';
 import { AuthenticationStatus } from '@client-web/constant/authentication';
 import { UserCard } from '@client-web/components/userCard';
-import { getCurrentUser, logout } from '@client-web/service/auth';
+import { useAuth } from 'src/state/hook/useAuth';
 
 import styles from './page.module.scss';
 
@@ -18,23 +18,10 @@ type SortOrder = 'asc' | 'desc';
 
 export default function Home() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, isLoading: isLoadingUser, logout } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState<SortField>('name');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const user = await getCurrentUser();
-      if (user) {
-        setUser(user);
-      }
-      setIsLoading(false);
-    };
-
-    fetchUser();
-  }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -54,14 +41,17 @@ export default function Home() {
       }
     };
 
-    if (!isLoading) {
+    if (!isLoadingUser) {
       fetchUsers();
     }
-  }, [isLoading, sortBy, sortOrder]);
+  }, [isLoadingUser, sortBy, sortOrder]);
 
-  const handleLogout = async () => {
-    await logout();
-    router.push(ClientRoute.Login);
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        router.push(ClientRoute.Login);
+      },
+    });
   };
 
   const handleSortChange = (field: SortField) => {
@@ -86,7 +76,7 @@ export default function Home() {
         </div>
         <p>A Next.js application built with Turborepo and Turbopack</p>
 
-        {isLoading ? (
+        {isLoadingUser ? (
           <p>Loading user data...</p>
         ) : user ? (
           <div className={styles.currentUserSection}>

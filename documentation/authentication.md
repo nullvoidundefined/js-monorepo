@@ -291,7 +291,7 @@ app.use(authRouter);
 ```typescript
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-export async function loginWithGoogle() {
+export async function login() {
   window.location.href = `${API_URL}/api/auth/google`;
 }
 
@@ -337,7 +337,7 @@ export async function logout() {
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { loginWithGoogle, isAuthenticated } from '@client-web/lib/auth';
+import { login, isAuthenticated } from '@client-web/lib/auth';
 
 export default function Login() {
   const router = useRouter();
@@ -354,7 +354,7 @@ export default function Login() {
   return (
     <main>
       <h1>Login</h1>
-      <button onClick={loginWithGoogle}>
+      <button onClick={login}>
         Sign in with Google
       </button>
     </main>

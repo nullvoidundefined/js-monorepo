@@ -25,7 +25,9 @@
       "@client-web/components/*": ["src/component/*"],
       "@client-web/constant/*": ["src/constant/*"],
       "@client-web/service/*": ["src/service/*"],
-      "@client-web/style/*": ["./src/style/*"]
+      "@client-web/style/*": ["./src/style/*"],
+      "@client-web/hook/*": ["src/state/hook/*"],
+      "@client-web/provider/*": ["src/state/provider/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
