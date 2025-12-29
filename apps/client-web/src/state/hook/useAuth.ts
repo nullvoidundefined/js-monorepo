@@ -7,30 +7,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { User } from '@packages/type';
 import { ApiRoute } from '@packages/constant';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-
-// Query keys for React Query cache management
-export const authKeys = {
-  all: ['auth'] as const,
-  user: () => [...authKeys.all, 'user'] as const,
-};
-
-/**
- * Helper function to initiate Google OAuth login
- * This redirects the user to the backend OAuth endpoint
- */
-export function login(): void {
-  window.location.href = `${API_URL}${ApiRoute.AuthGoogle}`;
-}
-
-/**
- * Legacy function for backwards compatibility
- * Now returns null as we use OAuth
- */
-export function getAuthToken(): string | null {
-  return null;
-}
-
 /**
  * Main authentication hook that provides all auth-related functionality
  *
@@ -61,7 +37,15 @@ export function getAuthToken(): string | null {
  * ```
  */
 export function useAuth() {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
   const queryClient = useQueryClient();
+
+  // Query keys for React Query cache management
+  const authKeys = {
+    all: ['auth'] as const,
+    user: () => [...authKeys.all, 'user'] as const,
+  };
 
   // Get current user query
   const {
@@ -121,6 +105,13 @@ export function useAuth() {
   // Invalidate auth cache function
   const invalidateAuth = () => {
     queryClient.invalidateQueries({ queryKey: authKeys.all });
+  };
+  /**
+   * Helper function to initiate Google OAuth login
+   * This redirects the user to the backend OAuth endpoint
+   */
+  const login = () => {
+    window.location.href = `${API_URL}${ApiRoute.AuthGoogle}`;
   };
 
   return {
