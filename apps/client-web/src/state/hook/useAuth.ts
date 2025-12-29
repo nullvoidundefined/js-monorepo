@@ -20,7 +20,7 @@ export const authKeys = {
  * This redirects the user to the backend OAuth endpoint
  */
 export function login(): void {
-  window.location.href = `${API_URL}/api/auth/google`;
+  window.location.href = `${API_URL}${ApiRoute.AuthGoogle}`;
 }
 
 /**
