@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 
-import '@client-web/style/globals.css';
+import '@client-web/style/globals.scss';
 
 export const metadata: Metadata = {
-  title: 'Client Web App',
   description: 'A Next.js application in a Turborepo monorepo',
   icons: {
     icon: '/favicon.svg',
   },
+  title: 'Client Web App',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

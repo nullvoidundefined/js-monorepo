@@ -5,10 +5,9 @@ import { useEffect, useState } from 'react';
 
 import { User } from '@packages/type';
 
-import { getCurrentUser, logout } from 'src/service/auth';
-
 import { ProtectedRoute } from 'src/component/ProtectedRoute';
 import { UserCard } from 'src/component/UserCard';
+import { getCurrentUser, logout } from 'src/service/auth';
 
 type SortField = 'name' | 'email' | 'id';
 type SortOrder = 'asc' | 'desc';
