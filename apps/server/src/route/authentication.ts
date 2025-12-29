@@ -4,6 +4,8 @@ import { Request, Response, Router } from 'express';
 import passport from 'passport';
 import { Profile, Strategy as GoogleStrategy, VerifyCallback } from 'passport-google-oauth20';
 
+import { ApiRoute } from '@packages/constant';
+
 const authRouter = Router();
 
 // Google OAuth configuration from environment variables
@@ -93,30 +95,60 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
-        console.error('Authentication error:', error);
+        // Log error without exposing sensitive details
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('Authentication error:', error);
+        } else {
+          console.error('Authentication error occurred:', {
+            timestamp: new Date().toISOString(),
+            message: error instanceof Error ? error.message : 'Unknown error',
+          });
+        }
         return done(error as Error);
       }
     }
   )
 );
 
-// Serialize user into session
-passport.serializeUser(
-  (user: Express.User, done: (err: Error | null, id?: Express.User) => void) => {
-    done(null, user);
-  }
-);
+// Serialize user into session - store only user ID for security and efficiency
+passport.serializeUser((user: Express.User, done: (err: Error | null, id?: string) => void) => {
+  done(null, user.id);
+});
 
-// Deserialize user from session
+// Deserialize user from session - fetch fresh user data from database
 passport.deserializeUser(
-  (user: Express.User, done: (err: Error | null, user?: Express.User | false) => void) => {
-    done(null, user);
+  async (id: string, done: (err: Error | null, user?: Express.User | false) => void) => {
+    try {
+      // Fetch user from database by ID
+      const [dbUser] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, parseInt(id, 10)))
+        .limit(1);
+
+      if (!dbUser) {
+        return done(null, false);
+      }
+
+      const user: Express.User = {
+        id: dbUser.id.toString(),
+        email: dbUser.email,
+        name: [dbUser.firstName, dbUser.lastName].filter(Boolean).join(' '),
+        createdAt: dbUser.createdAt,
+        updatedAt: dbUser.updatedAt,
+        photo: dbUser.photo || undefined,
+      };
+
+      done(null, user);
+    } catch (error) {
+      done(error as Error);
+    }
   }
 );
 
 // Route to initiate Google OAuth login
 authRouter.get(
-  '/api/auth/google',
+  ApiRoute.AuthGoogle,
   passport.authenticate('google', {
     scope: ['profile', 'email'],
   })
@@ -124,7 +156,7 @@ authRouter.get(
 
 // Google OAuth callback route
 authRouter.get(
-  '/api/auth/google/callback',
+  ApiRoute.AuthGoogleCallback,
   passport.authenticate('google', {
     failureRedirect: '/login',
     session: true,
@@ -137,7 +169,7 @@ authRouter.get(
 );
 
 // Logout route
-authRouter.post('/api/auth/logout', (req: Request, res: Response) => {
+authRouter.post(ApiRoute.AuthLogout, (req: Request, res: Response) => {
   req.logout((err: Error | null) => {
     if (err) {
       res.status(500).json({ error: 'Failed to logout' });
@@ -160,7 +192,7 @@ authRouter.post('/api/auth/logout', (req: Request, res: Response) => {
 });
 
 // Get current user route
-authRouter.get('/api/auth/user', (req: Request, res: Response) => {
+authRouter.get(ApiRoute.AuthUser, (req: Request, res: Response) => {
   if (req.isAuthenticated()) {
     res.json({ user: req.user });
   } else {

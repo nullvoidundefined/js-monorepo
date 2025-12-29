@@ -10,14 +10,18 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@packages/constant": "*",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "database": "*",
     "dotenv": "^17.2.3",
     "express": "^4.18.2",
+    "express-rate-limit": "^7.5.1",
     "express-session": "^1.18.0",
+    "helmet": "^7.2.0",
     "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

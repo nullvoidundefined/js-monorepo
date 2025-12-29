@@ -3,11 +3,13 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { ClientRoute } from '@packages/constant';
 import { User } from '@packages/type';
 
-import { ProtectedRoute } from 'src/component/ProtectedRoute';
-import { UserCard } from 'src/component/UserCard';
-import { getCurrentUser, logout } from 'src/service/auth';
+import { ProtectedRoute } from '@client-web/components/protectedRoute';
+import { UserCard } from '@client-web/components/userCard';
+import { getCurrentUser, logout } from '@client-web/service/auth';
+
 import styles from './page.module.scss';
 
 type SortField = 'name' | 'email' | 'id';
@@ -58,7 +60,7 @@ export default function Home() {
 
   const handleLogout = async () => {
     await logout();
-    router.push('/login');
+    router.push(ClientRoute.Login);
   };
 
   const handleSortChange = (field: SortField) => {

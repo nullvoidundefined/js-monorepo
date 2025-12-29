@@ -1,14 +1,23 @@
-import { User } from '@packages/type';
 import { db, users } from 'database';
 import { Request, Response, Router } from 'express';
 
+import { ApiRoute } from '@packages/constant';
+import { User } from '@packages/type';
+
+import { requireAuth } from '../middleware/auth';
+import { asyncHandler } from '../middleware/errorHandler';
+import { userListQuerySchema, validateQuery } from '../middleware/validation';
+
+
 const userRouter = Router();
 
-userRouter.get('/api/users', async (req: Request, res: Response) => {
-  try {
-    // Get sorting parameters from query
-    const sortBy = (req.query.sortBy as string) || 'name';
-    const order = (req.query.order as string) || 'asc';
+userRouter.get(
+  ApiRoute.Users,
+  requireAuth,
+  validateQuery(userListQuerySchema),
+  asyncHandler(async (req: Request, res: Response) => {
+    // Get validated sorting parameters from query
+    const { sortBy, order } = req.query as { sortBy: 'name' | 'email' | 'id'; order: 'asc' | 'desc' };
 
     // Fetch users from database
     const dbUsers = await db.select().from(users);
@@ -38,10 +47,7 @@ userRouter.get('/api/users', async (req: Request, res: Response) => {
     });
 
     res.json(sortedUsers);
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ error: 'Failed to fetch users' });
-  }
-});
+  })
+);
 
 export { userRouter };

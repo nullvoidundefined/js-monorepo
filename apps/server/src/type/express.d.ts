@@ -1,8 +1,17 @@
 import 'express-session';
-import { User } from '@packages/type';
 
 declare global {
   namespace Express {
+    // Make User type available in Express namespace for Passport
+    interface User {
+      id: string;
+      email: string;
+      name: string;
+      createdAt: Date | string;
+      updatedAt: Date | string;
+      photo?: string;
+    }
+
     interface Request {
       user?: User;
       logout(callback: (err: Error | null) => void): void;

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { isAuthenticated, loginWithGoogle } from 'src/service/auth';
 import styles from './page.module.scss';
+import { ClientRoute } from '@packages/constant';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +17,7 @@ export default function LoginPage() {
     const checkAuth = async () => {
       const authenticated = await isAuthenticated();
       if (authenticated) {
-        router.push('/');
+        router.push(ClientRoute.Home);
       } else {
         setIsCheckingAuth(false);
       }

@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { ClientRoute } from '@packages/constant';
+
 import { isAuthenticated } from 'src/service/auth';
 
 interface ProtectedRouteProps {
@@ -19,14 +21,30 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
       const authenticated = await isAuthenticated();
 
       if (!authenticated) {
-        router.push('/login');
+        router.push(ClientRoute.Login);
       } else {
         setIsAuthorized(true);
       }
       setIsChecking(false);
     };
 
+    const handleFocus = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push(ClientRoute.Login);
+      }
+    };
+
+    // Check auth on mount
     checkAuth();
+
+    // Add focus listener to check auth when user returns to the tab
+    window.addEventListener('focus', handleFocus);
+
+    // Cleanup listener on unmount
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
   }, [router]);
 
   if (isChecking) {
