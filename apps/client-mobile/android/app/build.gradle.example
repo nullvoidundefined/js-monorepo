@@ -1,0 +1,25 @@
+// Example build.gradle configuration for OAuth
+
+android {
+    namespace "com.clientmobile"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        applicationId "com.clientmobile"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        
+        // ADD THIS FOR OAUTH
+        // Replace YOUR-ANDROID-CLIENT-ID with just the client ID part
+        // Example: If your client ID is 123456-xyz.apps.googleusercontent.com
+        // Use: com.googleusercontent.apps.123456-xyz
+        manifestPlaceholders = [
+            appAuthRedirectScheme: 'com.googleusercontent.apps.YOUR-ANDROID-CLIENT-ID'
+        ]
+    }
+    
+    // ... rest of your build.gradle
+}
+

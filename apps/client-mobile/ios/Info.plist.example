@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Your existing Info.plist contents here -->
+	
+	<!-- ADD THIS SECTION FOR OAUTH -->
+	<!-- Replace YOUR-IOS-CLIENT-ID with the reversed client ID -->
+	<!-- Example: If your client ID is 123456-abc.apps.googleusercontent.com -->
+	<!-- Use: com.googleusercontent.apps.123456-abc -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.clientmobile</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- REPLACE THIS WITH YOUR REVERSED CLIENT ID -->
+				<string>com.googleusercontent.apps.YOUR-IOS-CLIENT-ID</string>
+			</array>
+		</dict>
+	</array>
+	
+	<!-- Optional: Allow opening URLs in Safari for testing -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>googlechrome</string>
+		<string>com.google.chrome.ios</string>
+	</array>
+</dict>
+</plist>
+
