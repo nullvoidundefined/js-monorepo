@@ -56,7 +56,22 @@ const WebViewContainer: React.FC<WebViewContainerProps> = ({url, title}) => {
 
   const handleWebViewMessage = (event: any) => {
     try {
+      // Validate message is from our trusted origin
+      const messageUrl = event.nativeEvent.url;
+      const trustedOrigin = new URL(url).origin;
+      
+      if (messageUrl && !messageUrl.startsWith(trustedOrigin)) {
+        console.warn('Ignoring message from untrusted origin:', messageUrl);
+        return;
+      }
+      
       const data = JSON.parse(event.nativeEvent.data);
+      
+      // Validate message structure
+      if (!data || typeof data !== 'object' || !data.type) {
+        console.warn('Invalid message format');
+        return;
+      }
       
       // Handle logout message from web app
       if (data.type === 'LOGOUT') {
@@ -105,14 +120,7 @@ const WebViewContainer: React.FC<WebViewContainerProps> = ({url, title}) => {
             domStorageEnabled={true}
             javaScriptEnabled={true}
             sharedCookiesEnabled={true}
-            source={{
-              headers: authState?.accessToken
-                ? {
-                    Authorization: `Bearer ${authState.accessToken}`,
-                  }
-                : undefined,
-              uri: url,
-            }}
+            source={{uri: url}}
             startInLoadingState={true}
             style={styles.webView}
             thirdPartyCookiesEnabled={true}
@@ -123,15 +131,19 @@ const WebViewContainer: React.FC<WebViewContainerProps> = ({url, title}) => {
             }}
             onLoadEnd={() => {
               setLoading(false);
-              // Inject auth tokens after page loads
-              if (authState?.accessToken) {
+              // Inject auth tokens after page loads (using ID token for authentication)
+              if (authState?.idToken) {
+                // Safely escape tokens to prevent JavaScript injection
+                const escapedIdToken = authState.idToken.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                const escapedAccessToken = authState.accessToken.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                
                 const injectedJavaScript = `
                   (function() {
                     try {
-                      localStorage.setItem('auth_token', '${authState.accessToken}');
-                      localStorage.setItem('id_token', '${authState.idToken}');
+                      localStorage.setItem('id_token', '${escapedIdToken}');
+                      localStorage.setItem('auth_token', '${escapedAccessToken}');
                     } catch (e) {
-                      console.error('Failed to set auth tokens:', e);
+                      console.error('Failed to set auth tokens');
                     }
                   })();
                   true;
