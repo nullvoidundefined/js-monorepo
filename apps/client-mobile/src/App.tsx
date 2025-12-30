@@ -11,7 +11,7 @@ const AppContent = (): React.JSX.Element => {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={APP_COLORS.primary} />
+        <ActivityIndicator color={APP_COLORS.primary} size="large" />
       </View>
     );
   }
@@ -33,14 +33,14 @@ const App = (): React.JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: APP_COLORS.background,
+    flex: 1,
   },
   loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: APP_COLORS.background,
+    flex: 1,
+    justifyContent: 'center',
   },
 });
 

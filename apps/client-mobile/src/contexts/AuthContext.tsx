@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
       setIsLoading(true);
       const state = await authService.getAuthState();
       setAuthState(state);
-      
+
       if (state) {
         const profile = authService.getUserProfile();
         setUserProfile(profile);
@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
       setIsLoading(true);
       const state = await authService.login();
       setAuthState(state);
-      
+
       const profile = authService.getUserProfile();
       setUserProfile(profile);
     } catch (error) {
@@ -72,11 +72,11 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
 
   const value: AuthContextType = {
     authState,
-    userProfile,
-    isLoading,
     isAuthenticated: authState !== null,
+    isLoading,
     login,
     logout,
+    userProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

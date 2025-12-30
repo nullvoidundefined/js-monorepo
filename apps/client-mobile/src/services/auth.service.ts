@@ -32,11 +32,11 @@ export interface UserProfile {
 
 // OAuth configuration
 const config = {
-  issuer: GOOGLE_OAUTH_ISSUER,
   clientId:
     Platform.OS === 'ios'
       ? GOOGLE_OAUTH_IOS_CLIENT_ID
       : GOOGLE_OAUTH_ANDROID_CLIENT_ID,
+  issuer: GOOGLE_OAUTH_ISSUER,
   redirectUrl:
     Platform.OS === 'ios'
       ? `${GOOGLE_OAUTH_IOS_CLIENT_ID.split('.')[0].split('apps.')[0]}:/oauth2redirect/google`
@@ -44,8 +44,8 @@ const config = {
   scopes: ['openid', 'profile', 'email'],
   serviceConfiguration: {
     authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
-    tokenEndpoint: 'https://oauth2.googleapis.com/token',
     revocationEndpoint: 'https://oauth2.googleapis.com/revoke',
+    tokenEndpoint: 'https://oauth2.googleapis.com/token',
   },
 };
 
@@ -60,10 +60,10 @@ class AuthService {
       const result = await authorize(config);
       this.authState = result;
       await this.saveAuthState(result);
-      
+
       // Optionally sync with backend
       await this.syncWithBackend(result);
-      
+
       return result;
     } catch (error) {
       console.error('OAuth login error:', error);
@@ -78,8 +78,8 @@ class AuthService {
     try {
       if (this.authState?.accessToken) {
         await revoke(config, {
-          tokenToRevoke: this.authState.accessToken,
           includeBasicAuth: true,
+          tokenToRevoke: this.authState.accessToken,
         });
       }
     } catch (error) {
@@ -194,15 +194,15 @@ class AuthService {
   private async syncWithBackend(authState: AuthState): Promise<void> {
     try {
       const response = await fetch(`${API_URL}${ApiRoute.AuthMobileVerify}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authState.idToken}`,
-        },
         body: JSON.stringify({
           accessToken: authState.accessToken,
           idToken: authState.idToken,
         }),
+        headers: {
+          'Authorization': `Bearer ${authState.idToken}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
       });
 
       if (!response.ok) {

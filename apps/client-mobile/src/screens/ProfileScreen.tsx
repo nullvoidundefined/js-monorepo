@@ -6,7 +6,7 @@ import {CURRENT_URLS} from '../constants/urls';
 const ProfileScreen = (): React.JSX.Element => {
   return (
     <SafeAreaView style={styles.container}>
-      <WebViewContainer url={CURRENT_URLS.profile} title="Profile" />
+      <WebViewContainer title="Profile" url={CURRENT_URLS.profile} />
     </SafeAreaView>
   );
 };

@@ -12,8 +12,8 @@ const BASE_URLS = {
 // Build full URLs using route constants
 const buildUrls = (baseUrl: string) => ({
   home: `${baseUrl}${ClientRoute.Home}`,
-  profile: `${baseUrl}${ClientRoute.Profile}`,
   login: `${baseUrl}${ClientRoute.Login}`,
+  profile: `${baseUrl}${ClientRoute.Profile}`,
 });
 
 export const WEB_APP_URLS = {
@@ -25,7 +25,7 @@ export const WEB_APP_URLS = {
 
 // Determine which environment to use
 const __DEV__ = process.env.NODE_ENV === 'development';
-export const CURRENT_URLS = __DEV__ 
-  ? WEB_APP_URLS.development 
+export const CURRENT_URLS = __DEV__
+  ? WEB_APP_URLS.development
   : WEB_APP_URLS.production;
 

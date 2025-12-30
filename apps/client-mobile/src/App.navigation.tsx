@@ -16,25 +16,25 @@ const Tab = createBottomTabNavigator();
 const App = (): React.JSX.Element => {
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle="dark-content" backgroundColor={APP_COLORS.background} />
+      <StatusBar backgroundColor={APP_COLORS.background} barStyle="dark-content" />
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={{
             headerShown: false,
-            tabBarStyle: styles.tabBar,
             tabBarActiveTintColor: APP_COLORS.primary,
             tabBarInactiveTintColor: APP_COLORS.textSecondary,
+            tabBarStyle: styles.tabBar,
           }}>
           <Tab.Screen
-            name="Home"
             component={HomeScreen}
+            name="Home"
             options={{
               tabBarLabel: 'Home',
             }}
           />
           <Tab.Screen
-            name="Profile"
             component={ProfileScreen}
+            name="Profile"
             options={{
               tabBarLabel: 'Profile',
             }}
@@ -50,9 +50,9 @@ const styles = StyleSheet.create({
     backgroundColor: APP_COLORS.background,
     borderTopColor: APP_COLORS.border,
     borderTopWidth: 1,
+    height: 60,
     paddingBottom: 5,
     paddingTop: 5,
-    height: 60,
   },
 });
 

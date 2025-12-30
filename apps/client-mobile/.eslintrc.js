@@ -1,9 +1,20 @@
 module.exports = {
-  root: true,
   extends: '@react-native',
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        '@typescript-eslint/no-shadow': ['error'],
+        'no-shadow': 'off',
+        'no-undef': 'off',
+      },
+    },
+  ],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
+  root: true,
   rules: {
+    'prettier/prettier': 'off', // Disable prettier ESLint rule, use prettier separately
     'react/jsx-sort-props': ['error', {
       callbacksLast: true,
       ignoreCase: true,
@@ -16,15 +27,5 @@ module.exports = {
       natural: true,
     }],
   },
-  overrides: [
-    {
-      files: ['*.ts', '*.tsx'],
-      rules: {
-        '@typescript-eslint/no-shadow': ['error'],
-        'no-shadow': 'off',
-        'no-undef': 'off',
-      },
-    },
-  ],
 };
 

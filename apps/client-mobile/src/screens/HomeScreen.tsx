@@ -6,7 +6,7 @@ import {CURRENT_URLS} from '../constants/urls';
 const HomeScreen = (): React.JSX.Element => {
   return (
     <SafeAreaView style={styles.container}>
-      <WebViewContainer url={CURRENT_URLS.home} title="Home" />
+      <WebViewContainer title="Home" url={CURRENT_URLS.home} />
     </SafeAreaView>
   );
 };
