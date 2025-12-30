@@ -1,19 +1,26 @@
+import {ClientRoute} from '@packages/constant';
+
 // Configuration for the web app URLs
 // Update these URLs to point to your actual web app
 
+// Base URLs for each environment
+const BASE_URLS = {
+  development: 'http://localhost:3000',
+  production: 'https://your-app.com',
+};
+
+// Build full URLs using route constants
+const buildUrls = (baseUrl: string) => ({
+  home: `${baseUrl}${ClientRoute.Home}`,
+  profile: `${baseUrl}${ClientRoute.Profile}`,
+  login: `${baseUrl}${ClientRoute.Login}`,
+});
+
 export const WEB_APP_URLS = {
   // For development, use your local development server
-  development: {
-    home: 'http://localhost:3000',
-    profile: 'http://localhost:3000/profile',
-    login: 'http://localhost:3000/login',
-  },
+  development: buildUrls(BASE_URLS.development),
   // For production, use your deployed web app URL
-  production: {
-    home: 'https://your-app.com',
-    profile: 'https://your-app.com/profile',
-    login: 'https://your-app.com/login',
-  },
+  production: buildUrls(BASE_URLS.production),
 };
 
 // Determine which environment to use

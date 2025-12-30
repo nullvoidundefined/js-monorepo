@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import WebViewContainer from './components/WebViewContainer';
+import {CURRENT_URLS} from './constants/urls';
 
 const App = (): React.JSX.Element => {
   return (
@@ -8,7 +9,7 @@ const App = (): React.JSX.Element => {
       <View style={styles.header}>
         <Text style={styles.headerText}>Client Mobile App</Text>
       </View>
-      <WebViewContainer url="http://localhost:3000" title="Web App" />
+      <WebViewContainer url={CURRENT_URLS.home} title="Web App" />
     </SafeAreaView>
   );
 };
@@ -31,4 +32,3 @@ const styles = StyleSheet.create({
 });
 
 export default App;
-

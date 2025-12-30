@@ -8,6 +8,8 @@ import {
   API_URL,
 } from '@env';
 
+import {ApiRoute} from '@packages/constant';
+
 const STORAGE_KEY = '@auth_state';
 
 export interface AuthState {
@@ -191,7 +193,7 @@ class AuthService {
    */
   private async syncWithBackend(authState: AuthState): Promise<void> {
     try {
-      const response = await fetch(`${API_URL}/api/auth/mobile/verify`, {
+      const response = await fetch(`${API_URL}${ApiRoute.AuthMobileVerify}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
