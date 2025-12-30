@@ -14,18 +14,25 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   root: true,
   rules: {
+    '@typescript-eslint/func-call-spacing': 'off', // Deprecated rule, disabled
     'prettier/prettier': 'off', // Disable prettier ESLint rule, use prettier separately
-    'react/jsx-sort-props': ['error', {
-      callbacksLast: true,
-      ignoreCase: true,
-      noSortAlphabetically: false,
-      reservedFirst: true,
-      shorthandFirst: true,
-    }],
-    'sort-keys': ['error', 'asc', {
-      caseSensitive: false,
-      natural: true,
-    }],
+    'react/jsx-sort-props': [
+      'error',
+      {
+        callbacksLast: true,
+        ignoreCase: true,
+        noSortAlphabetically: false,
+        reservedFirst: true,
+        shorthandFirst: true,
+      },
+    ],
+    'sort-keys': [
+      'error',
+      'asc',
+      {
+        caseSensitive: false,
+        natural: true,
+      },
+    ],
   },
 };
-

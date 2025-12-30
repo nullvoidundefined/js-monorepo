@@ -77,7 +77,7 @@ android {
     defaultConfig {
         applicationId "com.clientmobile"
         manifestPlaceholders = [
-            appAuthRedirectScheme: 'com.googleusercontent.apps.994614574768-7gdvi88903fd9fu8vb62lo50dqncttu4'
+            appAuthRedirectScheme: 'com.googleusercontent.apps.994614574768-8ec0h16vkktrobpn21b42cicgsbj2j6c'
         ]
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
