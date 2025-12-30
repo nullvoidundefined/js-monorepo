@@ -58,6 +58,7 @@ src/
 
 ## Documentation
 
+- **[Android Setup](./ANDROID_SETUP.md)** - **START HERE** for Android development
 - **[Installation Guide](./INSTALLATION.md)** - Complete setup instructions
 - **[OAuth Setup](./OAUTH_SETUP.md)** - OAuth configuration details
 - **[Quick Start](./QUICKSTART.md)** - Basic usage guide

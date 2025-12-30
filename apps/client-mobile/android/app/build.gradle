@@ -1,17 +1,23 @@
+// Monorepo: Configure React Native paths BEFORE applying plugins
+// Note: This uses the deprecated project.ext.react but it's required for monorepos
+// to ensure paths are set before the React plugin tries to read files
+project.ext.react = [
+    reactNativeDir: file("../../../node_modules/react-native"),
+    codegenDir: file("../../../node_modules/@react-native/codegen"),
+    cliFile: file("../../../node_modules/react-native/cli.js"),
+    root: file("../")
+]
+
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
 react {
-    /* Folders */
-    //   The root of your project, i.e. where "package.json" lives. Default is '..'
-    // root = file("../")
-    //   The folder where the react-native NPM package is. Default is ../node_modules/react-native
-    // reactNativeDir = file("../node_modules/react-native")
-    //   The folder where the react-native Codegen package is. Default is ../node_modules/@react-native/codegen
-    // codegenDir = file("../node_modules/@react-native/codegen")
-    //   The cli.js file which is the React Native CLI entrypoint. Default is ../node_modules/react-native/cli.js
-    // cliFile = file("../node_modules/react-native/cli.js")
+    /* Folders - already configured in project.ext.react above for monorepo */
+    root = project.ext.react.root
+    reactNativeDir = project.ext.react.reactNativeDir
+    codegenDir = project.ext.react.codegenDir
+    cliFile = project.ext.react.cliFile
     /* Variants */
     //   The list of variants to that are debuggable. For those we're going to
     //   skip the bundling of the JS bundle and the assets. By default is just 'debug'.
@@ -70,6 +76,9 @@ android {
     namespace "com.clientmobile"
     defaultConfig {
         applicationId "com.clientmobile"
+        manifestPlaceholders = [
+            appAuthRedirectScheme: 'com.googleusercontent.apps.994614574768-7gdvi88903fd9fu8vb62lo50dqncttu4'
+        ]
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -100,7 +109,9 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-    implementation("com.facebook.react:flipper-integration")
+    
+    // Flipper disabled for monorepo compatibility
+    // implementation("com.facebook.react:flipper-integration")
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
@@ -108,4 +119,8 @@ dependencies {
         implementation jscFlavor
     }
 }
+
+// Monorepo: Apply native modules from monorepo root
+apply from: new File(rootProject.projectDir, "../../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+applyNativeModulesAppBuildGradle(project)
 

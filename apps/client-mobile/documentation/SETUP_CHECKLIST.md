@@ -34,10 +34,15 @@ Use this checklist to complete the OAuth setup for the mobile app.
 #### Android OAuth Client
 
 - [ ] Get SHA-1 fingerprint:
+
   ```bash
   cd apps/client-mobile/android
-  keytool -keystore ~/.android/debug.keystore -list -v -alias androiddebugkey -storepass android -keypass android
+  npm run android:sha
+
+  # Or manually:
+  # keytool -keystore ~/.android/debug.keystore -list -v -alias androiddebugkey -storepass android -keypass android
   ```
+
 - [ ] Copy the SHA-1 value (looks like `A1:B2:C3:...`)
 - [ ] Back in Google Console, click **Create Credentials → OAuth client ID**
 - [ ] Select **Android** application type

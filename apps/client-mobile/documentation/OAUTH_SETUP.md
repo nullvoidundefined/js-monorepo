@@ -98,6 +98,49 @@ pod install
 cd ..
 ```
 
+#### Update `ios/ClientMobile/AppDelegate.h`:
+
+Add the RNAppAuth import and protocol conformance:
+
+```objc
+#import <RCTAppDelegate.h>
+#import <UIKit/UIKit.h>
+#import "RNAppAuthAuthorizationFlowManager.h"
+
+@interface AppDelegate : RCTAppDelegate <RNAppAuthAuthorizationFlowManager>
+
+@property(nonatomic, weak) id<RNAppAuthAuthorizationFlowManagerDelegate> authorizationFlowManagerDelegate;
+
+@end
+```
+
+#### Update `ios/ClientMobile/AppDelegate.mm`:
+
+Add the import and URL handler method:
+
+```objc
+#import "AppDelegate.h"
+#import <React/RCTBundleURLProvider.h>
+#import <React/RCTLinkingManager.h>
+
+@implementation AppDelegate
+
+// ... existing methods ...
+
+// Add this method before @end
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  if ([self.authorizationFlowManagerDelegate resumeExternalUserAgentFlowWithURL:url]) {
+    return YES;
+  }
+  return [RCTLinkingManager application:app openURL:url options:options];
+}
+
+@end
+```
+
 #### Update `ios/ClientMobile/Info.plist`:
 
 Add URL scheme for OAuth redirect. Add this before the final `</dict>`:

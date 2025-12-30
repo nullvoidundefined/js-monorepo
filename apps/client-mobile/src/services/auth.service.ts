@@ -39,7 +39,7 @@ const config = {
   issuer: GOOGLE_OAUTH_ISSUER,
   redirectUrl:
     Platform.OS === 'ios'
-      ? `${GOOGLE_OAUTH_IOS_CLIENT_ID.split('.')[0].split('apps.')[0]}:/oauth2redirect/google`
+      ? `com.googleusercontent.apps.${GOOGLE_OAUTH_IOS_CLIENT_ID.split('.')[0]}:/oauth2redirect/google`
       : `com.googleusercontent.apps.${GOOGLE_OAUTH_ANDROID_CLIENT_ID.split('.')[0]}:/oauth2redirect/google`,
   scopes: ['openid', 'profile', 'email'],
   serviceConfiguration: {
