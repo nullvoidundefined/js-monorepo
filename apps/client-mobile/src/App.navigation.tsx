@@ -1,8 +1,8 @@
 import React from 'react';
-import {StatusBar, StyleSheet} from 'react-native';
+import {StatusBar} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 import {enableScreens} from 'react-native-screens';
 import HomeScreen from './screens/HomeScreen';
 import {APP_COLORS} from './constants/theme';
@@ -10,7 +10,7 @@ import {APP_COLORS} from './constants/theme';
 // Enable screens for better performance
 enableScreens();
 
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const App = (): React.JSX.Element => {
   return (
@@ -20,35 +20,18 @@ const App = (): React.JSX.Element => {
         barStyle="dark-content"
       />
       <NavigationContainer>
-        <Tab.Navigator
+        <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            tabBarActiveTintColor: APP_COLORS.primary,
-            tabBarInactiveTintColor: APP_COLORS.textSecondary,
-            tabBarStyle: styles.tabBar,
           }}>
-          <Tab.Screen
+          <Stack.Screen
             component={HomeScreen}
             name="Home"
-            options={{
-              tabBarLabel: 'Home',
-            }}
           />
-        </Tab.Navigator>
+        </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: APP_COLORS.background,
-    borderTopColor: APP_COLORS.border,
-    borderTopWidth: 1,
-    height: 60,
-    paddingBottom: 5,
-    paddingTop: 5,
-  },
-});
 
 export default App;

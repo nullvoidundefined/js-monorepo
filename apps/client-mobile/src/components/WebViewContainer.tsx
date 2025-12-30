@@ -86,11 +86,6 @@ const WebViewContainer: React.FC<WebViewContainerProps> = ({url, title}) => {
   if (error) {
     return (
       <View style={styles.container}>
-        {title && (
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>{title}</Text>
-          </View>
-        )}
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Unable to Load Page</Text>
           <Text style={styles.errorDetail}>{error}</Text>
@@ -104,12 +99,6 @@ const WebViewContainer: React.FC<WebViewContainerProps> = ({url, title}) => {
 
   return (
     <View style={styles.container}>
-      {title && (
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>{title}</Text>
-        </View>
-      )}
-
       {/* Main WebView and Loading State */}
       {!error && (
         <>
@@ -162,43 +151,6 @@ const WebViewContainer: React.FC<WebViewContainerProps> = ({url, title}) => {
               <Text style={styles.loadingText}>Loading...</Text>
             </View>
           )}
-
-          <View style={styles.navigationBar}>
-            <TouchableOpacity
-              disabled={!canGoBack}
-              style={[styles.navButton, !canGoBack && styles.navButtonDisabled]}
-              onPress={handleGoBack}>
-              <Text
-                style={[
-                  styles.navButtonText,
-                  !canGoBack && styles.navButtonTextDisabled,
-                ]}>
-                ← Back
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.navButton}
-              onPress={handleReload}>
-              <Text style={styles.navButtonText}>⟳ Reload</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              disabled={!canGoForward}
-              style={[
-                styles.navButton,
-                !canGoForward && styles.navButtonDisabled,
-              ]}
-              onPress={handleGoForward}>
-              <Text
-                style={[
-                  styles.navButtonText,
-                  !canGoForward && styles.navButtonTextDisabled,
-                ]}>
-                Forward →
-              </Text>
-            </TouchableOpacity>
-          </View>
         </>
       )}
     </View>
@@ -228,17 +180,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: APP_SPACING.sm,
   },
-  header: {
-    alignItems: 'center',
-    backgroundColor: APP_COLORS.primary,
-    paddingHorizontal: APP_SPACING.md,
-    paddingVertical: APP_SPACING.md,
-  },
-  headerTitle: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600',
-  },
   loadingContainer: {
     alignItems: 'center',
     backgroundColor: APP_COLORS.background,
@@ -253,30 +194,6 @@ const styles = StyleSheet.create({
     color: APP_COLORS.textSecondary,
     fontSize: 16,
     marginTop: APP_SPACING.md,
-  },
-  navButton: {
-    paddingHorizontal: APP_SPACING.md,
-    paddingVertical: APP_SPACING.sm,
-  },
-  navButtonDisabled: {
-    opacity: 0.3,
-  },
-  navButtonText: {
-    color: APP_COLORS.primary,
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  navButtonTextDisabled: {
-    color: APP_COLORS.textSecondary,
-  },
-  navigationBar: {
-    alignItems: 'center',
-    backgroundColor: APP_COLORS.backgroundSecondary,
-    borderTopColor: APP_COLORS.border,
-    borderTopWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: APP_SPACING.sm,
   },
   retryButton: {
     backgroundColor: APP_COLORS.primary,

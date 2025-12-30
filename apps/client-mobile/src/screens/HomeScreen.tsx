@@ -1,12 +1,13 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
+import {ClientRoute} from '@packages/constant';
 import WebViewContainer from '../components/WebViewContainer';
-import {CURRENT_URLS} from '../constants/urls';
+import {WEB_APP_BASE_URL} from '../constants/urls';
 
 const HomeScreen = (): React.JSX.Element => {
   return (
     <SafeAreaView style={styles.container}>
-      <WebViewContainer title="Home" url={CURRENT_URLS.home} />
+      <WebViewContainer url={`${WEB_APP_BASE_URL}${ClientRoute.Home}`} />
     </SafeAreaView>
   );
 };
@@ -18,4 +19,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
-
