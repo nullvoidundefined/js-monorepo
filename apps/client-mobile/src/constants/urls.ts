@@ -13,7 +13,6 @@ const BASE_URLS = {
 const buildUrls = (baseUrl: string) => ({
   home: `${baseUrl}${ClientRoute.Home}`,
   login: `${baseUrl}${ClientRoute.Login}`,
-  profile: `${baseUrl}${ClientRoute.Profile}`,
 });
 
 export const WEB_APP_URLS = {
@@ -28,4 +27,3 @@ const __DEV__ = process.env.NODE_ENV === 'development';
 export const CURRENT_URLS = __DEV__
   ? WEB_APP_URLS.development
   : WEB_APP_URLS.production;
-

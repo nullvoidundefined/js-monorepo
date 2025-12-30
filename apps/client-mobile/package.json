@@ -8,7 +8,8 @@
     "android:sha": "./scripts/get-android-sha.sh",
     "build:android": "cd android && ./gradlew assembleRelease",
     "build:ios": "cd ios && xcodebuild -workspace ClientMobile.xcworkspace -scheme ClientMobile -configuration Release",
-    "ios": "react-native run-ios",
+    "ios": "react-native run-ios --simulator=\"iPhone 16\"",
+    "ios:device": "react-native run-ios",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "start": "react-native start",
     "test": "jest"

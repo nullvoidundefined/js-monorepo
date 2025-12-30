@@ -2,8 +2,8 @@ import React from 'react';
 import {ActivityIndicator, View, StyleSheet, SafeAreaView} from 'react-native';
 import {AuthProvider, useAuth} from './contexts/AuthContext';
 import LoginScreen from './screens/LoginScreen';
-import MainScreen from './screens/MainScreen';
 import {APP_COLORS} from './constants/theme';
+import HomeScreen from './screens/HomeScreen';
 
 const AppContent = (): React.JSX.Element => {
   const {isAuthenticated, isLoading} = useAuth();
@@ -18,7 +18,7 @@ const AppContent = (): React.JSX.Element => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {isAuthenticated ? <MainScreen /> : <LoginScreen />}
+      {isAuthenticated ? <HomeScreen /> : <LoginScreen />}
     </SafeAreaView>
   );
 };
@@ -45,4 +45,3 @@ const styles = StyleSheet.create({
 });
 
 export default App;
-

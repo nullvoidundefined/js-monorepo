@@ -5,7 +5,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {enableScreens} from 'react-native-screens';
 import HomeScreen from './screens/HomeScreen';
-import ProfileScreen from './screens/ProfileScreen';
 import {APP_COLORS} from './constants/theme';
 
 // Enable screens for better performance
@@ -16,7 +15,10 @@ const Tab = createBottomTabNavigator();
 const App = (): React.JSX.Element => {
   return (
     <SafeAreaProvider>
-      <StatusBar backgroundColor={APP_COLORS.background} barStyle="dark-content" />
+      <StatusBar
+        backgroundColor={APP_COLORS.background}
+        barStyle="dark-content"
+      />
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={{
@@ -30,13 +32,6 @@ const App = (): React.JSX.Element => {
             name="Home"
             options={{
               tabBarLabel: 'Home',
-            }}
-          />
-          <Tab.Screen
-            component={ProfileScreen}
-            name="Profile"
-            options={{
-              tabBarLabel: 'Profile',
             }}
           />
         </Tab.Navigator>
@@ -57,4 +52,3 @@ const styles = StyleSheet.create({
 });
 
 export default App;
-

@@ -68,7 +68,13 @@ class AuthService {
    */
   async login(): Promise<AuthState> {
     try {
+      console.log('🔐 Starting OAuth login with config:', {
+        clientId: config.clientId,
+        redirectUrl: config.redirectUrl,
+        issuer: config.issuer,
+      });
       const result = await authorize(config);
+      console.log('✅ OAuth login successful!');
       this.authState = result;
       await this.saveAuthState(result);
 
@@ -77,7 +83,7 @@ class AuthService {
 
       return result;
     } catch (error) {
-      console.error('OAuth login error:', error);
+      console.error('❌ OAuth login error:', error);
       throw error;
     }
   }

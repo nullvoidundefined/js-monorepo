@@ -18,7 +18,7 @@ interface WebViewContainerProps {
 
 const WebViewContainer: React.FC<WebViewContainerProps> = ({url, title}) => {
   const webViewRef = useRef<WebView>(null);
-  const {authState} = useAuth();
+  const {authState, logout} = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
@@ -52,6 +52,20 @@ const WebViewContainer: React.FC<WebViewContainerProps> = ({url, title}) => {
     setError(null);
     setLoading(true);
     handleReload();
+  };
+
+  const handleWebViewMessage = (event: any) => {
+    try {
+      const data = JSON.parse(event.nativeEvent.data);
+      
+      // Handle logout message from web app
+      if (data.type === 'LOGOUT') {
+        console.log('Received logout message from web app, logging out mobile app...');
+        logout();
+      }
+    } catch (error) {
+      console.error('Error parsing WebView message:', error);
+    }
   };
 
   if (error) {
@@ -126,6 +140,7 @@ const WebViewContainer: React.FC<WebViewContainerProps> = ({url, title}) => {
               }
             }}
             onLoadStart={() => setLoading(true)}
+            onMessage={handleWebViewMessage}
             onNavigationStateChange={handleNavigationStateChange}
           />
 
