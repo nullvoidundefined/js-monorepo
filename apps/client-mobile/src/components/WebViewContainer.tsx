@@ -128,8 +128,8 @@ const WebViewContainer: React.FC<WebViewContainerProps> = ({url, title}) => {
                 const injectedJavaScript = `
                   (function() {
                     try {
-                      localStorage.setItem('mobile_auth_token', '${authState.accessToken}');
-                      localStorage.setItem('mobile_id_token', '${authState.idToken}');
+                      localStorage.setItem('auth_token', '${authState.accessToken}');
+                      localStorage.setItem('id_token', '${authState.idToken}');
                     } catch (e) {
                       console.error('Failed to set auth tokens:', e);
                     }
