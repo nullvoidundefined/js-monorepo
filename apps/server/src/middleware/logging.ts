@@ -16,7 +16,9 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
     const ip = req.ip || req.socket.remoteAddress || 'unknown';
 
     if (process.env.NODE_ENV !== 'production') {
-      console.log(`[${new Date().toISOString()}] [${requestId}] ${method} ${url} - User-Agent: ${userAgent} - IP: ${ip}`);
+      console.log(
+        `[${new Date().toISOString()}] [${requestId}] ${method} ${url} - User-Agent: ${userAgent} - IP: ${ip}`
+      );
     }
   };
 
@@ -67,11 +69,10 @@ export const errorLogger = (err: Error, req: Request, _res: Response, next: Next
 
   console.error(`[${new Date().toISOString()}] [${requestId}] ERROR - ${method} ${url}`);
   console.error(`Error: ${err.message}`);
-  
+
   if (process.env.NODE_ENV !== 'production') {
     console.error(err.stack);
   }
 
   next(err);
 };
-

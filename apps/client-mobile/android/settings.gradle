@@ -1,12 +1,14 @@
 rootProject.name = 'ClientMobile'
 
-// Monorepo support: Use root node_modules for hoisted packages  
+// pnpm: RN packages in app's node_modules, CLI tools in root
+def appRoot = file("../")
 def monorepoRoot = file("../../../")
 
-// Apply native modules from monorepo root
+// Apply native modules from root (CLI is hoisted)
 apply from: new File(monorepoRoot, "node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
 applyNativeModulesSettingsGradle(settings)
 
 include ':app'
-includeBuild(new File(monorepoRoot, "node_modules/@react-native/gradle-plugin"))
+// RN gradle plugin is in app's node_modules
+includeBuild(new File(appRoot, "node_modules/@react-native/gradle-plugin"))
 

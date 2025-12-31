@@ -1,18 +1,17 @@
+import * as dotenv from 'dotenv';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Pool } from 'pg';
-import * as dotenv from 'dotenv';
 
 dotenv.config();
 
 async function runMigrations() {
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/myapp_dev',
+    connectionString:
+      process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/myapp_dev',
   });
 
   const db = drizzle(pool);
-
-  console.log('Running migrations...');
 
   try {
     await migrate(db, { migrationsFolder: './src/migrations' });
@@ -26,7 +25,3 @@ async function runMigrations() {
 }
 
 runMigrations();
-
-
-
-

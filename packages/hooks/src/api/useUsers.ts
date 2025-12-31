@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { User } from '@packages/type';
 
 export type SortField = 'name' | 'email' | 'id';
@@ -9,6 +10,7 @@ export interface UseUsersParams {
   sortOrder?: SortOrder;
   apiUrl?: string;
   enabled?: boolean;
+  authToken?: string;
 }
 
 export interface UseUsersResult {
@@ -22,17 +24,34 @@ export interface UseUsersResult {
 const fetchUsers = async (
   sortBy: SortField = 'name',
   sortOrder: SortOrder = 'asc',
-  apiUrl: string = 'http://localhost:3001'
+  apiUrl: string = 'http://localhost:3001',
+  authToken?: string
 ): Promise<User[]> => {
-  const response = await fetch(
-    `${apiUrl}/api/users?sortBy=${sortBy}&order=${sortOrder}`,
-    {
-      credentials: 'include',
-    }
-  );
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+  if (authToken) {
+    headers['Authorization'] = `Bearer ${authToken}`;
+  }
+
+  const url = `${apiUrl}/api/users?sortBy=${sortBy}&order=${sortOrder}`;
+  console.log('[useUsers] Fetching from:', url);
+  console.log('[useUsers] Has auth token:', !!authToken);
+
+  const response = await fetch(url, {
+    credentials: 'include',
+    headers,
+  });
+
+  console.log('[useUsers] Response status:', response.status);
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch users: ${response.statusText}`);
+    const errorText = await response.text();
+    console.log('[useUsers] Error response:', errorText);
+    throw new Error(
+      `Failed to fetch users: ${response.status} ${response.statusText} - ${errorText}`
+    );
   }
 
   return response.json();
@@ -43,12 +62,13 @@ export const useUsers = ({
   sortOrder = 'asc',
   apiUrl,
   enabled = true,
+  authToken,
 }: UseUsersParams = {}): UseUsersResult => {
   const effectiveApiUrl = apiUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
   const { data, isLoading, isError, error, refetch } = useQuery<User[], Error>({
     queryKey: ['users', sortBy, sortOrder],
-    queryFn: () => fetchUsers(sortBy, sortOrder, effectiveApiUrl),
+    queryFn: () => fetchUsers(sortBy, sortOrder, effectiveApiUrl, authToken),
     enabled,
   });
 
@@ -60,4 +80,3 @@ export const useUsers = ({
     refetch,
   };
 };
-

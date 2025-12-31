@@ -2,9 +2,9 @@
 // Note: This uses the deprecated project.ext.react but it's required for monorepos
 // to ensure paths are set before the React plugin tries to read files
 project.ext.react = [
-    reactNativeDir: file("../../../node_modules/react-native"),
-    codegenDir: file("../../../node_modules/@react-native/codegen"),
-    cliFile: file("../../../node_modules/react-native/cli.js"),
+    reactNativeDir: file("../../node_modules/react-native"),
+    codegenDir: file("../../node_modules/@react-native/codegen"),
+    cliFile: file("../../node_modules/react-native/cli.js"),
     root: file("../")
 ]
 
@@ -74,6 +74,15 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace "com.clientmobile"
+    
+    // Force androidx.core to compatible version
+    configurations.all {
+        resolutionStrategy {
+            force 'androidx.core:core:1.13.1'
+            force 'androidx.core:core-ktx:1.13.1'
+        }
+    }
+    
     defaultConfig {
         applicationId "com.clientmobile"
         manifestPlaceholders = [
@@ -120,7 +129,7 @@ dependencies {
     }
 }
 
-// Monorepo: Apply native modules from monorepo root
+// pnpm: Apply native modules from root (CLI is hoisted)
 apply from: new File(rootProject.projectDir, "../../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
 applyNativeModulesAppBuildGradle(project)
 

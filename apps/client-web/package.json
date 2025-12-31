@@ -10,10 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@packages/constant": "*",
-    "@packages/hooks": "*",
-    "@packages/type": "*",
-    "@packages/utils": "*",
+    "@packages/constant": "workspace:*",
+    "@packages/hooks": "workspace:*",
+    "@packages/type": "workspace:*",
+    "@packages/utils": "workspace:*",
     "@tanstack/react-query": "^5.90.15",
     "next": "^14.0.4",
     "react": "^18.2.0",

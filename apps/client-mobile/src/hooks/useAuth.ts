@@ -3,10 +3,13 @@
  * Uses mobile-specific auth utilities
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { User } from '@packages/type';
-import { API_URL } from '@env';
-import { useAuth as useAuthContext } from '../contexts/AuthContext';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {Platform} from 'react-native';
+import {User} from '@packages/type';
+import {API_URL_IOS, API_URL_ANDROID} from '@env';
+import {useAuth as useAuthContext} from '../contexts/AuthContext';
+
+const API_URL = Platform.OS === 'ios' ? API_URL_IOS : API_URL_ANDROID;
 
 /**
  * Main authentication hook that provides all auth-related functionality
@@ -51,11 +54,21 @@ export function useAuth() {
   const fetchCurrentUser = async (): Promise<User | null> => {
     try {
       const authState = await authContext.authState;
+      
+      console.log('[useAuth] Platform:', Platform.OS);
+      console.log('[useAuth] API_URL:', API_URL);
+      console.log('[useAuth] Has authState:', !!authState);
+      console.log('[useAuth] Has idToken:', !!authState?.idToken);
+
       if (!authState?.idToken) {
+        console.log('[useAuth] No idToken, returning null');
         return null;
       }
 
-      const response = await fetch(`${API_URL}/api/auth/user`, {
+      const url = `${API_URL}/api/auth/user`;
+      console.log('[useAuth] Fetching from:', url);
+
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${authState.idToken}`,
@@ -63,16 +76,25 @@ export function useAuth() {
         },
       });
 
+      console.log('[useAuth] Response status:', response.status);
+
       if (!response.ok) {
         if (response.status === 401) {
+          console.log('[useAuth] Unauthorized (401)');
           return null;
         }
-        throw new Error('Failed to fetch user');
+        const errorText = await response.text();
+        console.error('[useAuth] Error response:', errorText);
+        throw new Error(
+          `Failed to fetch user: ${response.status} - ${errorText}`,
+        );
       }
 
-      return response.json();
+      const data = await response.json();
+      console.log('[useAuth] User fetched:', data.user?.email);
+      return data.user;
     } catch (error) {
-      console.error('Error fetching user:', error);
+      console.error('[useAuth] Error:', error);
       return null;
     }
   };
@@ -92,32 +114,32 @@ export function useAuth() {
   });
 
   // Logout mutation
-  const { mutate: logout, isPending: isLoggingOut } = useMutation({
+  const {mutate: logout, isPending: isLoggingOut} = useMutation({
     mutationFn: async () => {
       await authContext.logout();
     },
     onSuccess: () => {
       // Clear all auth-related queries from the cache
-      queryClient.invalidateQueries({ queryKey: authKeys.all });
+      queryClient.invalidateQueries({queryKey: authKeys.all});
       // Set the user to null immediately for optimistic UI
       queryClient.setQueryData(authKeys.user(), null);
     },
     onError: error => {
       console.error('Error during logout:', error);
       // Clear cache even on error to be safe
-      queryClient.invalidateQueries({ queryKey: authKeys.all });
+      queryClient.invalidateQueries({queryKey: authKeys.all});
       queryClient.setQueryData(authKeys.user(), null);
     },
   });
 
   // Login mutation
-  const { mutate: login, isPending: isLoggingIn } = useMutation({
+  const {mutate: login, isPending: isLoggingIn} = useMutation({
     mutationFn: async () => {
       await authContext.login();
     },
     onSuccess: () => {
       // Invalidate and refetch user data
-      queryClient.invalidateQueries({ queryKey: authKeys.all });
+      queryClient.invalidateQueries({queryKey: authKeys.all});
     },
     onError: error => {
       console.error('Error during login:', error);
@@ -126,7 +148,7 @@ export function useAuth() {
 
   // Invalidate auth cache function
   const invalidateAuth = () => {
-    queryClient.invalidateQueries({ queryKey: authKeys.all });
+    queryClient.invalidateQueries({queryKey: authKeys.all});
   };
 
   return {
@@ -145,4 +167,3 @@ export function useAuth() {
     refetch,
   };
 }
-

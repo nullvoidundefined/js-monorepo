@@ -192,12 +192,48 @@ authRouter.post(ApiRoute.AuthLogout, (req: Request, res: Response) => {
 });
 
 // Get current user route
-authRouter.get(ApiRoute.AuthUser, (req: Request, res: Response) => {
+authRouter.get(ApiRoute.AuthUser, async (req: Request, res: Response) => {
   if (req.isAuthenticated()) {
     res.json({ user: req.user });
-  } else {
-    res.status(401).json({ error: 'Not authenticated' });
+    return;
   }
+
+  // Handle JWT token auth (mobile)
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+
+    try {
+      // Decode the JWT (without verification for now - in production use google-auth-library)
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(Buffer.from(base64, 'base64').toString());
+
+      // Find user in database by Google ID
+      const googleId = payload.sub;
+      const [dbUser] = await db.select().from(users).where(eq(users.googleId, googleId)).limit(1);
+
+      if (dbUser) {
+        const user = {
+          id: dbUser.id.toString(),
+          email: dbUser.email,
+          name: [dbUser.firstName, dbUser.lastName].filter(Boolean).join(' '),
+          createdAt: dbUser.createdAt,
+          updatedAt: dbUser.updatedAt,
+          photo: dbUser.photo || undefined,
+        };
+        res.json({ user });
+        return;
+      } else {
+        res.status(401).json({ error: 'Authentication required' });
+        return;
+      }
+    } catch (error) {
+      console.error('JWT decode error:', error);
+    }
+  }
+
+  res.status(401).json({ error: 'Authentication required' });
 });
 
 export { authRouter, passport };

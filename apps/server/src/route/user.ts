@@ -8,7 +8,6 @@ import { requireAuth } from '../middleware/auth';
 import { asyncHandler } from '../middleware/errorHandler';
 import { userListQuerySchema, validateQuery } from '../middleware/validation';
 
-
 const userRouter = Router();
 
 userRouter.get(
@@ -17,7 +16,10 @@ userRouter.get(
   validateQuery(userListQuerySchema),
   asyncHandler(async (req: Request, res: Response) => {
     // Get validated sorting parameters from query
-    const { sortBy, order } = req.query as { sortBy: 'name' | 'email' | 'id'; order: 'asc' | 'desc' };
+    const { sortBy, order } = req.query as {
+      sortBy: 'name' | 'email' | 'id';
+      order: 'asc' | 'desc';
+    };
 
     // Fetch users from database
     const dbUsers = await db.select().from(users);

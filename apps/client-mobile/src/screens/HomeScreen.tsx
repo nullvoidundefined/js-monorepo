@@ -7,19 +7,31 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import {useAuth} from '../hooks/useAuth';
+import {useAuth as useAuthContext} from '../contexts/AuthContext';
 import {useUsers, SortField, SortOrder} from '@packages/hooks';
 import {User} from '@packages/type';
 import {UserCard} from '../components/UserCard';
 import {APP_COLORS} from '../constants/theme';
+import {API_URL_ANDROID, API_URL_IOS} from '@env';
 
 const HomeScreen = (): React.JSX.Element => {
   const {user, isLoading: isLoadingUser, logout} = useAuth();
+  const {authState} = useAuthContext();
   const [sortBy, setSortBy] = useState<SortField>('name');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
-  const {users, isLoading: isLoadingUsers} = useUsers({
+  const apiUrl = Platform.OS === 'ios' ? API_URL_IOS : API_URL_ANDROID;
+
+  const {
+    users,
+    isLoading: isLoadingUsers,
+    error: errorUsers,
+  } = useUsers({
+    apiUrl,
+    authToken: authState?.idToken,
     enabled: !isLoadingUser,
     sortBy,
     sortOrder,
@@ -40,6 +52,11 @@ const HomeScreen = (): React.JSX.Element => {
     }
   };
 
+  // TODO: Add error toast
+  if (errorUsers) {
+    return <Text>Error: {errorUsers.message}</Text>;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -52,7 +69,6 @@ const HomeScreen = (): React.JSX.Element => {
         <Text style={styles.subtitle}>
           A React Native application built with Turborepo
         </Text>
-
         {isLoadingUser ? (
           <ActivityIndicator color={APP_COLORS.primary} size="large" />
         ) : user ? (

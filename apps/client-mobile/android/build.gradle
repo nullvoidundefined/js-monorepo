@@ -9,8 +9,8 @@ buildscript {
         ndkVersion = "25.1.8937393"
         kotlinVersion = "1.8.0"
         
-        // Monorepo: Set react-native directory before React plugin loads
-        reactNativeDir = file("../../../node_modules/react-native")
+        // pnpm: Use app's node_modules
+        reactNativeDir = file("../node_modules/react-native")
     }
     repositories {
         google()
@@ -30,14 +30,12 @@ allprojects {
         google()
         mavenCentral()
         maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            // Monorepo: Use hoisted packages from root
-            url("$rootDir/../../../node_modules/react-native/android")
+            // pnpm: React Native in app's node_modules
+            url("$rootDir/../node_modules/react-native/android")
         }
         maven {
-            // Android JSC is installed from npm
-            // Monorepo: Use hoisted packages from root
-            url("$rootDir/../../../node_modules/jsc-android/dist")
+            // pnpm: JSC in app's node_modules
+            url("$rootDir/../node_modules/jsc-android/dist")
         }
         maven { url 'https://www.jitpack.io' }
     }

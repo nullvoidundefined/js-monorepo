@@ -82,9 +82,7 @@ class AuthService {
    */
   async login(): Promise<AuthState> {
     try {
-      console.log('🔐 Starting OAuth login...');
       const result = await authorize(config);
-      console.log('✅ OAuth login successful');
       this.authState = result;
       await this.storage.save(result);
 

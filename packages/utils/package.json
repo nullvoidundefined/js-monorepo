@@ -5,8 +5,8 @@
   "types": "./src/index.ts",
   "scripts": {},
   "dependencies": {
-    "@packages/type": "*",
-    "@packages/constant": "*"
+    "@packages/type": "workspace:*",
+    "@packages/constant": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

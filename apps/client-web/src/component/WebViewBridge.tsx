@@ -12,10 +12,10 @@ import { notifyNativeReady, isInWebView } from '../utils/native-bridge';
 export function WebViewBridge() {
   useEffect(() => {
     if (isInWebView()) {
-      console.log('📱 Running in React Native WebView');
       notifyNativeReady();
     }
   }, []);
 
   return null;
 }
+
