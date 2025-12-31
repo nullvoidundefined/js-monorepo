@@ -1,0 +1,33 @@
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: var(--color-background);
+}
+
+.errorCard {
+  max-width: 500px;
+  padding: 40px;
+  background-color: var(--color-card-background);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px var(--color-shadow);
+  text-align: center;
+  border: 1px solid var(--color-border);
+}
+
+.errorTitle {
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.errorMessage {
+  margin-bottom: 24px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+

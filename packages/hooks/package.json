@@ -1,0 +1,27 @@
+{
+  "name": "@packages/hooks",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@packages/type": "*"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.90.15",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.46",
+    "eslint": "^8.56.0",
+    "eslint-config-custom": "*",
+    "react": "^18.2.0",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^18.0.0"
+  }
+}
+

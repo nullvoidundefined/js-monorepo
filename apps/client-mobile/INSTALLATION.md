@@ -255,7 +255,7 @@ open -a "Android Studio" android/
 5. Sign in with your Google account
 6. Grant permissions
 7. You should be redirected back to the app
-8. The app should show your profile and load the WebView
+8. The app should show your profile
 
 ---
 

@@ -1,11 +1,11 @@
 /**
  * React Query hooks for authentication
- * Replaces the service/auth.ts module with hooks-based approach
+ * Uses web-specific auth utilities
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { User } from '@packages/type';
-import { ApiRoute } from '@packages/constant';
+import { fetchCurrentUser, getGoogleOAuthUrl, logout as logoutApi } from '@client-web/utils/auth';
 
 /**
  * Main authentication hook that provides all auth-related functionality
@@ -37,8 +37,6 @@ import { ApiRoute } from '@packages/constant';
  * ```
  */
 export function useAuth() {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-
   const queryClient = useQueryClient();
 
   // Query keys for React Query cache management
@@ -47,7 +45,7 @@ export function useAuth() {
     user: () => [...authKeys.all, 'user'] as const,
   };
 
-  // Get current user query
+  // Get current user query using web auth utility
   const {
     data: user,
     isLoading,
@@ -56,21 +54,7 @@ export function useAuth() {
   } = useQuery({
     queryKey: authKeys.user(),
     queryFn: async (): Promise<User | null> => {
-      try {
-        const response = await fetch(`${API_URL}${ApiRoute.AuthUser}`, {
-          credentials: 'include', // Important: include cookies for session
-        });
-
-        if (!response.ok) {
-          return null;
-        }
-
-        const data = await response.json();
-        return data.user || null;
-      } catch (error) {
-        console.error('Error fetching current user:', error);
-        return null;
-      }
+      return fetchCurrentUser();
     },
     // Cache user data for 5 seconds to prevent excessive API calls
     staleTime: 5000,
@@ -79,12 +63,8 @@ export function useAuth() {
   // Logout mutation
   const { mutate: logout, isPending: isLoggingOut } = useMutation({
     mutationFn: async () => {
-      const response = await fetch(`${API_URL}/api/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
+      const success = await logoutApi();
+      if (!success) {
         throw new Error('Logout failed');
       }
     },
@@ -111,7 +91,7 @@ export function useAuth() {
    * This redirects the user to the backend OAuth endpoint
    */
   const login = () => {
-    window.location.href = `${API_URL}${ApiRoute.AuthGoogle}`;
+    window.location.href = getGoogleOAuthUrl();
   };
 
   return {

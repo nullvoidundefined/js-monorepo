@@ -1,0 +1,153 @@
+version: 2
+updates:
+  # Root workspace
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    groups:
+      # Group development dependencies
+      development-dependencies:
+        patterns:
+          - "typescript"
+          - "eslint*"
+          - "@typescript-eslint/*"
+          - "prettier"
+          - "jest"
+          - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group production dependencies
+      production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "typescript"
+          - "eslint*"
+          - "@typescript-eslint/*"
+          - "prettier"
+          - "jest"
+          - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Client Web app
+  - package-ecosystem: "npm"
+    directory: "/apps/client-web"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "client-web"
+    groups:
+      nextjs:
+        patterns:
+          - "next*"
+          - "eslint-config-next"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react*"
+
+  # Server app
+  - package-ecosystem: "npm"
+    directory: "/apps/server"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "server"
+    groups:
+      express:
+        patterns:
+          - "express*"
+          - "@types/express*"
+
+  # Database app
+  - package-ecosystem: "npm"
+    directory: "/apps/database"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "database"
+    groups:
+      drizzle:
+        patterns:
+          - "drizzle-*"
+
+  # Client Mobile app
+  - package-ecosystem: "npm"
+    directory: "/apps/client-mobile"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "client-mobile"
+    groups:
+      react-native:
+        patterns:
+          - "react-native*"
+          - "@react-native/*"
+
+  # Type package
+  - package-ecosystem: "npm"
+    directory: "/packages/type"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "packages"
+
+  # Constant package
+  - package-ecosystem: "npm"
+    directory: "/packages/constant"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "packages"
+
+  # Component library
+  - package-ecosystem: "npm"
+    directory: "/packages/component-library"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "packages"
+
+  # ESLint config
+  - package-ecosystem: "npm"
+    directory: "/packages/eslint-config-custom"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "packages"
+
+  # GitHub Actions (if you add them later)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "github-actions"

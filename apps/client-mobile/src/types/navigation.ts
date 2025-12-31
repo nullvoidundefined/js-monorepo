@@ -12,4 +12,3 @@ declare global {
     interface RootParamList extends RootTabParamList {}
   }
 }
-

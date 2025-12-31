@@ -19,6 +19,9 @@ declare global {
       session?: {
         destroy(callback: (err: Error | null) => void): void;
       };
+      // Custom middleware properties
+      apiVersion?: string;
+      requestId?: string;
     }
   }
 }
@@ -27,6 +30,19 @@ declare module 'express-session' {
   interface SessionData {
     passport?: {
       user?: Express.User;
+    };
+    // CSRF token for cross-site request forgery protection
+    csrfToken?: string;
+    // Session user data
+    userId?: number;
+    user?: {
+      id: number;
+      email: string;
+      username: string;
+      firstName?: string | null;
+      lastName?: string | null;
+      photo?: string | null;
+      googleId?: string | null;
     };
   }
 }
