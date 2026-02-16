@@ -15,7 +15,7 @@
     "@packages/type": "workspace:*",
     "@packages/utils": "workspace:*",
     "@tanstack/react-query": "^5.90.15",
-    "next": "^14.0.4",
+    "next": "^16.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -27,7 +27,7 @@
     "@types/react-dom": "^18.2.18",
     "eslint": "^8.56.0",
     "eslint-config-custom": "*",
-    "eslint-config-next": "^14.0.4",
+    "eslint-config-next": "^16.1.6",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "sass": "^1.97.1",
